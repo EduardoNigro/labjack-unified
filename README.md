@@ -56,8 +56,8 @@ The LabJack unified methods in this example are:
 """
 import time
 import numpy as np
-from labjack-unified.utils import plot_line
-from labjack-unified.devices import LabJackU3, LabJackU6, LabJackT7
+from labjack_unified.utils import plot_line
+from labjack_unified.devices import LabJackU3, LabJackU6, LabJackT7
 
 # To use a LabJack U6 or a T7, change the device name
 # from LabJackU3 below to either LabJackU6 or LabJackT7
