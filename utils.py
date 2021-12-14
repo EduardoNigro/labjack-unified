@@ -4,7 +4,7 @@ Contains useful function that is used in the LabJack coding examples.
 Plotly was chosen over Matplotlib due to its interactive graphs.
 
 Author: Eduardo Nigro
-    rev 0.0.1
+    rev 0.0.2
     2021-12-13
 """
 import numpy as np

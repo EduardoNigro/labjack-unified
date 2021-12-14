@@ -11,7 +11,7 @@ The classes are built using the existing LabJack python packages:
 Note: Use code folding at the method level to improve readability.
 
 Author: Eduardo Nigro
-    rev 0.0.1
+    rev 0.0.2
     2021-12-13
 """
 import re
