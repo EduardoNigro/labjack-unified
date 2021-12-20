@@ -14,7 +14,7 @@ set_digital | Writes digital value to specified port(s)
 get_digital | Reads digital value from specified port(s)
 set_analog | Writes analog value to specified port(s)
 get_analog | Reads analog value from specified port(s)
-get_labjacktemp | Gets LabJack internal temperature
+get_labjacktemp | Gets ambient temperature from internal sensor
 set_stream | Sets LabJack configuration for data streaming
 get_stream | Gets streaming data
 stop_stream | Stops data streaming

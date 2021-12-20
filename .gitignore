@@ -1,7 +1,8 @@
 labjack-unified.code-workspace
-setup.py
 pyproject.toml
+setup.py
 __init__.py
 __pycache__/
 dist/
 src/
+docs/build/

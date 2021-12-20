@@ -11,7 +11,7 @@ The classes are built using the existing LabJack python packages:
 Note: Use code folding at the method level to improve readability.
 
 Author: Eduardo Nigro
-    rev 0.0.2
+    rev 0.0.3
     2021-12-13
 """
 import re
@@ -83,70 +83,37 @@ from LabJackPython import (
 
 class LabJackU3:
     """
-    The class to represent the LabJack U3
+    The class to represent the LabJack U3.
+
+
+    :param serialnum: The device serial number.
+    :type serialnum: int
 
     Ports that are made available with this class are listed below.
-    The port names on the first column assume a U3-HV. The second column
-    contains alternate names that are sometimes used interchangeably.
+    The port names assume a U3-HV.
 
-    Analog Output
-    'DAC0'      'N.A.'
-    'DAC1'      'N.A.'
-    Analog Input
-    'AIN0'	    'FIO0'
-    'AIN1'	    'FIO1'
-    'AIN2'	    'FIO2'
-    'AIN3'	    'FIO3'
-    Flexible I/O
-    'FIO4'	    'AIN4'
-    'FIO5'	    'AIN5'
-    'FIO6'	    'AIN6'
-    'FIO7'	    'AIN7'
-    'EIO0'	    'AIN8'
-    'EIO1'	    'AIN9'
-    'EIO2'	    'AIN10'
-    'EIO3'	    'AIN11'
-    'EIO4'	    'AIN12'
-    'EIO5'	    'AIN13'
-    'EIO6'	    'AIN14'
-    'EIO7'	    'AIN15'
+        * Analog Output: ``'DAC0'``, ``'DAC1'``
+        * Analog Input: ``'AIN0'``, ``'AIN1'``, ``'AIN2'``, ``'AIN3'``
+        * Flexible I/O: ``'FIO4'``, ``'FIO5'``, ``'FIO6'``, ``'FIO7'``, 
+        * Flexible I/O: ``'EIO0'``, ``'EIO1'``, ... , ``'EIO7'``
 
-    Properties
-    ----------
-    (none public)
+    Device-specific methods:
 
-    Methods
-    -------
-    close ............ Closes the LabJack device
-    display_info ..... Displays summary info about the device
-    set_digital ...... Writes digital value to specified port(s)
-    get_digital ...... Reads digital value from specified port(s)
-    set_analog ....... Writes analog value to specified port(s)
-    get_analog ....... Reads analog value from specified port(s)
-    get_labjacktemp .. Gets LabJack internal temperature
-    set_stream ....... Sets LabJack configuration for data streaming
-    get_stream ....... Gets streaming data
-    stop_stream ...... Stops data streaming
-    set_PWM .......... Sets LabJack configuration for PWM output
-    set_dutycycle .... Sets duty cycle of PWM output (-100 to 100)
-    set_quadrature ... Sets LabJack configuration for encoder A-B-Z input
-    get_counter ...... Gets edge count from encoder A-B signals
-    reset_counter .... Resets edge counter
+        * `get_config` - Gets port configuration
+        * `reset_config` - Resets port configuration to factory defaults
+        * `get_bitdir` - Gets digital port bit direction
 
-    get_config ....... Gets port configuration
-    reset_config ..... Resets port configuration to factory defaults
-    get_bitdir ....... Gets digital port bit direction
 
-    Example
-    -------
-    Connect to the first found U3.
-    >>> from labjack_unified.devices import LabJackU3
-    >>> lju3 = LabJackU3()
-    >>> lju3.display_info()
-    >>> lju3.close()
+    Connect to the first found U3:
 
-    You can also connect to a specific device using its serial number.
-    >>> lju3 = LabJackU3(320012345)
+        >>> from labjack_unified.devices import LabJackU3
+        >>> lju3 = LabJackU3()
+        >>> lju3.display_info()
+        >>> lju3.close()
+
+    You can also connect to a specific device using its serial number:
+
+        >>> lju3 = LabJackU3(320012345)
 
     """
     # CONSTRUCTOR METHODS
@@ -176,10 +143,20 @@ class LabJackU3:
             print('Opened LabJack', self._serialnum)
 
     def close(self):
+        """
+        Close the U3 device connection.
+
+        >>> lju3.close()
+
+        """
         self._staticlib.Close(self._commhandle.handle)
         print('Closed LabJack', self._serialnum)
 
     def display_info(self):
+        """
+        Displays a summary with the U3 device information.
+        
+        """
         print('____________________________________________________________')
         print('Device Name........', self._type)
         print('Serial Number......', self._serialnum)
@@ -193,40 +170,35 @@ class LabJackU3:
         """
         Set the LabJack flexible IO port configuration.
 
-        Parameters
-        ----------
-        name : str
-            The port name to configure.
-        config : str, int
-            The configuration option 
-            If `name` is `ALL` a string of mask bits for all 16 ports is used.
-            For single port, `config` can be either a string `ANALOG` or `DIGITAL`.
-            Alternativelly 1 or 0 can be used.
 
-        Returns
-        -------
-        None.
+        :param name: The port name to configure.
+        :type name: str
 
-        Example
-        -------
-        Configure flexible port FIO4 as analog
-        >>> lju3.set_config('FIO4', 'Analog')
+        :param config:  The configuration option. 
+            If `name` is ``'ALL'`` a string of mask bits for all 16 ports
+            is used. For single port, `config` can be either a string
+            ``'ANALOG'`` or ``'DIGITAL'``. Alternativelly, 1 or 0 can be used.
+        :type config: str, int
 
-        Configure flexible port FIO4 as analog
-        >>> lju3.set_config('FIO4', 1)
 
-        Configure flexible port EIO0 as digital
-        >>> lju3.set_config('EIO0', 'Digital')
+        Configure flexible ports ``'FIO4'`` and ``'FIO5'`` as analog:
 
-        Configure flexible port EIO0 as digital
-        >>> lju3.set_config('EIO0', 0)
+            >>> lju3.set_config('FIO4', 'Analog')
+            >>> lju3.set_config('FIO5', 1)
 
-        Configure flexible port EI01 and EI03 as analog and
-        ports AIN0 to AIN3 to analog if a U3-LV is used.
-        Note 1: LSB is port 1 ('AIN0')
-        Note 2: On a U3-HV, the first 4 ports are always analog
-                and the first 4 LSB settings are ignored
+        Configure flexible ports ``'EIO0'`` and ``'EIO1'`` as digital:
+            
+            >>> lju3.set_config('EIO0', 'Digital')
+            >>> lju3.set_config('EIO1', 0)
+
+        Configure flexible ports ``'EI01'`` and ``'EI03'`` as analog and
+        ports ``'AIN0'`` to ``'AIN3'`` to analog (if a U3-LV is used):
+
         >>> lju3.set_config('ALL', '0000101000001111')
+
+        .. note::
+            1. LSB (Least Significant Bit) is port ``'AIN0'``.
+            2. On a U3-HV, the first 4 ports are always analog and the first 4 LSB settings are ignored.
 
         """
         if name.lower() == 'all':
@@ -259,32 +231,29 @@ class LabJackU3:
         """
         Get the LabJack flexible IO port configuration.
 
-        Parameters
-        ----------
-        name : str
-            The port name to get the configuration
-            If `name` is `ALL` a dictionary with keys `EIOAnalog` and
+
+        :param name: The port name to get the configuration.
+            If `name` is ``'ALL'`` a dictionary with keys `EIOAnalog` and
             `FIOAnalog` is returned.
+        :type name: str
 
-        Returns
-        -------
-        config : int, dict
-            For single channel name, an integer is returned, where 1=Analog
-            and 0=Digital. If name is `ALL` a dictionary containing the bit 
-            mask string for the EIO and FIO ports is returned. The least 
-            significant bit (LSB) of the EIO and FIO bit strings correspond
-            respectively to ports EIO0 and FIO0.
+        :returns: For single port `name`, an integer is returned, where 
+            `1=Analog` and `0=Digital`. If `name` is ``'ALL'`` a dictionary
+            containing the bit mask string for the `EIO` and `FIO` ports is
+            returned. The least significant bit (LSB) of the `EIO` and `FIO`
+            bit strings correspond respectively to ports ``'EIO0'`` and
+            ``'FIO0'``.
+        :rtype: int, dict
 
-        Example
-        -------
-        Get flexible port configuration
-        >>> lju3.get_config()
 
-        Notes
-        -----
-        In the case of a LabJack U3-HV, the four LSBs of the FIO ports
-        are always 1s. They correspond to the always analog ports AIN0
-        to AIN3.
+        Get flexible port configuration:
+
+            >>> lju3.get_config()
+
+        .. note::
+            In the case of a LabJack U3-HV, the four LSBs of the `FIO` ports
+            are always `1s`. They correspond to the always analog ports
+            ``'AIN0'`` to ``'AIN3'``.
 
         """
         mask = eGet(self._commhandle.handle, LJ_ioGET_ANALOG_ENABLE_PORT,
@@ -305,22 +274,11 @@ class LabJackU3:
         """
         Reset the flexible IO ports to default all digital.
 
-        Parameters
-        ----------
-        None.
+            >>> lju3.reset_config()
 
-        Returns
-        -------
-        None.
-
-        Example
-        -------
-        Reset flexible port configuration
-        >>> lju3.reset_config()
-
-        Notes
-        -----
-        On the LabJack U3-HV the first 4 ports AIN0 to AIN3 are always analog.
+        .. note::
+            On the LabJack U3-HV the first 4 ports ``'AIN0'`` to ``'AIN3'``
+            are always analog.
 
         """
         ePut(self._commhandle.handle, LJ_ioPIN_CONFIGURATION_RESET, 0, 0, 0)
@@ -330,24 +288,18 @@ class LabJackU3:
         Write the digital state to an output port.
         It also sets the port direction to output.
 
-        Parameters
-        ----------
-        name : str
-            The port name to set the state.
-        state : int
-            The digital state 0 = Low, 1 = High.
 
-        Returns
-        -------
-        None.
+        :param name: The port name to set the state.
+        :type name: str
 
-        Example
-        -------
-        Set port FIO4 output to high
-        >>> lju3.set_digital('FIO4', 1)
+        :param state: The digital state `0 = Low`, `1 = High`.
+        :type state: int
 
-        Set port FIO5 output to low
-        >>> lju3.set_digital('FIO5', 0)
+
+        Set port ``'FIO4'`` output to high and port ``'FIO5'`` to low:
+
+            >>> lju3.set_digital('FIO4', 1)
+            >>> lju3.set_digital('FIO5', 0)
 
         """
         # Checking for valid inputs
@@ -364,20 +316,17 @@ class LabJackU3:
         Read the digital state from an input port.
         It also sets the port direction to input.
 
-        Parameters
-        ----------
-        name : str
-            The port name to get the state.
 
-        Returns
-        -------
-        state : int
-            The state of the digital port. 0 = Low, 1 = High.
+        :param name: The port name to get the state.
+        :type name: str
 
-        Example
-        -------
-        Get port FIO6 input state
-        >>> lju3.get_digital('FIO6')
+        :returns: The state of the digital port. `0 = Low`, `1 = High`.
+        :rtype: int
+
+
+        Get port ``'FIO6'`` input state:
+
+            >>> lju3.get_digital('FIO6')
 
         """
         # Checking for valid inputs
@@ -392,20 +341,17 @@ class LabJackU3:
         """
         Read the direction of the digital port.
 
-        Parameters
-        ----------
-        name : str
-            The port name to get the direction.
 
-        Returns
-        -------
-        bitdir : str
-            The direction of the digital port. `Input` or `Output`
+        :param name: The port name to get the direction.
+        :type name: str
 
-        Example
-        -------
-        Get the direction of port FIO6
-        >>> lju3.get_bitdir('FIO6')
+        :returns: The direction of the digital port. `Input` or `Output`.
+        :rtype: str
+
+
+        Get the direction of port ``'FIO6'``:
+
+            >>> lju3.get_bitdir('FIO6')
 
         """
         # Checking for valid input port names
@@ -424,22 +370,18 @@ class LabJackU3:
         """
         Set analog output voltage.
 
-        Parameters
-        ----------
-        name : str
-            The port name to set the output voltage.
-            Available ports are 'DAC0' and 'DAC1'.
-        value : float
-            The output voltage between 0 and 5 V.
 
-        Returns
-        -------
-        None.
+        :param name: The port name to set the output voltage.
+            Available ports are ``'DAC0'`` and ``'DAC1'``.
+        :type name: str
 
-        Example
-        -------
-        Set port DAC1 output voltage to 2.2 V.
-        >>> lju3.set_analog('DAC1', 2.2)
+        :param value: The output voltage between ``0`` and ``5`` V.
+        :type value: float
+
+
+        Set port ``'DAC1'`` output voltage to ``2.2`` V:
+
+            >>> lju3.set_analog('DAC1', 2.2)
 
         """
         # Checking for valid input port names
@@ -457,35 +399,39 @@ class LabJackU3:
         """
         Get analog input voltage.
 
-        Parameters
-        ----------
-        namepos : str
-            The positive port name to get the voltage.
-        *args : str
-            Can be one of the three options:
-            - `single-ended` (default value)
-            - The negative port name to get a differential voltage.
-            - `special` to get increased range on the voltage reading.
 
-        Returns
-        -------
-        value : float
-            The input voltage value
-            - On a U3-HV, the range for ports AIN0 to AIN3 is +/-10 V
-            - On a U3-HV, `special` enables a range of -10 to +20 V
-            - FIO ports have a range of +/- 2.4 V
-            - FIO ports using `special` have a range of 0 to 3.6 V
+        :param name: The positive port name to get the voltage.
+        :type name: str
 
-        Example
-        -------
-        Get single-ended voltage on port FIO2
-        >>> lju3.get_analog('FIO2')
+        :param args: Can be one of the three options:
 
-        Get differential voltage betweens ports AIN0 and AIN1
-        >>> lju3.get_analog('AIN0', 'AIN1')
+            * ``'single-ended'`` (default value)
+            * The negative port name to get a differential voltage.
+            * ``'special'`` to get increased range on the voltage reading.
 
-        Get special range voltage on port FIO3
-        >>> lju3.get_analog('FIO3', 'special')
+        :type args: str
+
+        :returns: The input voltage value.
+
+            * On a U3-HV, the range for ports ``'AIN0'`` to ``'AIN3'`` is +/-10 V
+            * On a U3-HV, ``'special'`` enables a range of -10 to +20 V
+            * `FIO` ports have a range of +/- 2.4 V
+            * `FIO` ports using ``'special'`` have a range of 0 to 3.6 V
+
+        :rtype: float
+
+
+        Get single-ended voltage on port ``'FIO2'``:
+
+            >>> lju3.get_analog('FIO2')
+
+        Get differential voltage betweens ports ``'AIN0'`` and ``'AIN1'``:
+        
+            >>> lju3.get_analog('AIN0', 'AIN1')
+
+        Get special range voltage on port ``'FIO3'``:
+
+            >>> lju3.get_analog('FIO3', 'special')
 
         """
         # Checking for differential measurement
@@ -514,39 +460,36 @@ class LabJackU3:
         """
         Set and start data streaming.
 
-        Parameters
-        ----------
-        names : str, list
-            The U3 channel name(or list of channel names) to be streamed.
-        scanrate : int
-            The scan rate (Hz) of the data streaming. The default (and maximum)
-            value is 50000 Hz. The effective scan frequency of each channel is
-            the scan rate divided by the number of scanned channels. 
-        readrate : float
+
+        :param name: The U3 port name (or list of names) to be streamed.
+        :type name: str, list(str)
+
+        :param scanrate:  The scan rate (Hz) of the data streaming. 
+            The default (and maximum) value is ``50000`` Hz. The effective scan
+            frequency of each port is the scan rate divided by the number of
+            scanned ports.
+        :type scanrate: int
+
+        :param readrate:
             The rate in seconds at which blocks of data are retrieved from the
-            data buffer. The default value is 0.5 seconds.
+            data buffer. The default value is ``0.5`` seconds.
+        :type readrate: float
 
-        Returns
-        -------
-        None.
 
-        Example
-        -------
-        Retrieves streaming data from port AIN0 at 25 kHz every 0.5 s
-        >>> lju3.set_stream('AIN0', scanrate=25000, readrate=0.5)
+        Set data streaming on port ``'AIN0'`` at ``25000`` Hz, every ``0.5`` s:
+            
+            >>> lju3.set_stream('AIN0', scanrate=25000, readrate=0.5)
 
-        Retrieves streaming data from port AIN0 and AIN1 at 50 kHz
-        every 1.0 s
-        >>> lju3.get_analog(['AIN0', 'AIN1'], scanrate=50000, readrate=1.0)
+        Set data streaming on ports ``'AIN0'`` and ``'AIN1'`` at ``50000`` Hz,
+        every ``1.0`` s:
 
-        Notes
-        -----
-        Only analog input channels AIN0 to AIN3 can be streamed.
-        Hence, a Labjack U3-HV has to be used. While it's possible to
-        stream digital channels, that hasn't been implemented in this
-        release.
+            >>> lju3.set_stream(['AIN0', 'AIN1'], scanrate=50000, readrate=1.0)
 
-        See also get_stream, stop_stream
+        .. note::
+            Only analog input ports ``'AIN0'`` to ``'AIN3'`` can be
+            streamed. Hence, a Labjack U3-HV has to be used. While it's
+            possible to stream digital ports, that hasn't been implemented
+            in this release.
 
         """
         # Assigning streamed data block read-in rate (s)
@@ -564,13 +507,13 @@ class LabJackU3:
         portnum = []
         for name in names:
             portnum.append(self._get_AINnumber(name))
-        # Assigning number of streaming channels
+        # Assigning number of streaming ports
         self._streamnumchannels = len(portnum)
-        # Updating scan frequency per channel (Hz)
+        # Updating scan frequency per port (Hz)
         self._streamscanfreq = int(self._scanrate/self._streamnumchannels)
-        # Clearing streaming channels
+        # Clearing streaming ports
         ePut(self._commhandle.handle, LJ_ioCLEAR_STREAM_CHANNELS, 0, 0, 0)
-        # Adding channels to scan list
+        # Adding ports to scan list
         for num in portnum:
             ePut(self._commhandle.handle, LJ_ioADD_STREAM_CHANNEL, num, 0, 0)
         # Assigning scanning frequency
@@ -589,20 +532,7 @@ class LabJackU3:
         """
         Stop data streaming.
 
-        Parameters
-        ----------
-        None.
-
-        Returns
-        -------
-        None.
-
-        Example
-        -------
-        Stopping data streaming
-        >>> lju3.stop_stream()
-
-        See also set_stream, get_stream
+            >>> lju3.stop_stream()
 
         """
         ePut(self._commhandle.handle, LJ_ioSTOP_STREAM, 0, 0, 0)
@@ -611,35 +541,41 @@ class LabJackU3:
         """
         Get streaming data block.
 
-        Parameters
-        ----------
-        None.
 
-        Returns
-        -------
-        dt : float
-            The sampling period (s) between each data point.
-        data : ndarray
-            The numpy m-by-n array containing the streamed data where
-            m is the number of samples per channel in the block and n
-            is the number of channels defined in set_stream()
-        numscans : int
-            The actual number of scans per channel in the data block.
-        commbacklog : float
-            The communication backlog in % (increasing values indicate
-            that the computer cannot keep up with the data download from
-            the U3 driver)
-        devbacklog : float
-            The U3 device backlog in % (increasing values indicate that
-            the U3 device cannot keep up with the data streaming - usually
-            not the case)
+        :returns: 5-tuple
 
-        Example
-        -------
-        Retrieving scan period, data, and scan info
-        >>> dt, datablock, numscans, commbacklog, U3backlog = lju3.get_stream()
+            * dt
+            
+                The sampling period (s) between each data point.
 
-        See also set_stream, stop_stream
+            * data
+
+                The numpy `m-by-n` array containing the streamed data where
+                `m` is the number of samples per port in the block and `n`
+                is the number of ports defined in `set_stream`
+
+            * numscans
+            
+                The actual number of scans per port in the data block.
+
+            * commbacklog
+            
+                The communication backlog in % (increasing values indicate that
+                the computer cannot keep up with the data download from the U3
+                driver)
+
+            * devbacklog
+            
+                The U3 device backlog in % (increasing values indicate that the
+                device cannot keep up with the data streaming - usually not
+                the case)
+
+        :rtype: (float, ndarray, int, float, float)
+
+
+        Retrieve scan period, data, and scan info:
+
+            >>> dt, datablock, numscans, commbacklog, U3backlog = lju3.get_stream()
 
         """
         # Defining initial number of samples per channnel
@@ -650,7 +586,7 @@ class LabJackU3:
         numscansactual, datalong = self._eGetArray(
             self._commhandle.handle, LJ_ioGET_STREAM_DATA,
             LJ_chALL_CHANNELS, numscans, datasamples)
-        # Separating channels
+        # Separating ports
         numscansactual = int(numscansactual)
         nrow = numscansactual
         ncol = self._streamnumchannels
@@ -674,49 +610,57 @@ class LabJackU3:
         """
         Configure PWM output.
 
-        Parameters
-        ----------
-        pwmnum : int
-            The number of PWM output signals. 1 or 2 PWMs can be used.
-            For one PWM, the output port is FIO4. For two PWMs, the output
-            ports are FIO4 and FIO5
-        dirport1 : str
-            The type of ports that control the PWM "direction" for electric
-            motor control. There are three options:
-            - None  - Default value (no direction ports are used)
-            - 'DAC' - Uses analog ports DAC0 and DAC1
-            - 'DIO' - Uses digital ports FIO6 and FIO7
-            When using digital ports, a 10 kOhm resistor has to be connected
-            from the LabJack VS port to each one of the DIO ports to ensure
-            true 'high' and 'low' states.
-        dirport2 : str
-            Same as `dirport1`. It's used when two PWM outputs are enabled.
-            The 'DAC' option can only be used for one set of direction ports,
-            unless the two motors are running synchronously. For the 'DIO'
-            option, digital ports EIO0 and EIO1 are used.
-        frequency : int
-            The PWM signal frequency in Hz. In the case of two PWMs, both will
-            have the same frequency. Valid values are 183, 366 or 732.
 
-        Returns
-        -------
-        None.
+        :param pwmnum: The number of PWM output signals.
+            ``1`` or ``2`` PWMs can be used. For one PWM, the output port is
+            ``'FIO4'``. For two PWMs, the output ports are ``'FIO4'`` and 
+            ``'FIO5'``.
+        :type pwmnum: int
 
-        Example
-        -------
-        Set 1 PWM for motor control on FIO4 with direction ports on DAC0 and
-        DAC1. The PWM frequency is the default 366 Hz.
-        >>> lju3.set_pwm(dirport1='DAC')
+        :param dirport1: The type of ports that control the PWM `direction`
+            for electric motor control. There are three options:
 
-        Set 2 PWMs with a frequency of 183 Hz.
-        >>> lju3.set_pwm(pwmnum=2, frequency=183)
+            * ``None``  - Default value (no direction ports are used)
+            * ``'DAC'`` - Uses analog ports ``'DAC0'`` and ``'DAC1'``
+            * ``'DIO'`` - Uses digital ports ``'FIO6'`` and ``'FIO7'``
 
-        Set 2 PWMs for motor control on ports FIO4 and FIO5, using the digital
-        ports FIO6 and FIO7 for motor 1 direction, and EIO0 and EIO1 for motor
-        2 direction. The PWM frequency is 732 Hz
-        >>> lju3.set_pwm(pwmnum=2, dirport1='DIO', dirport2='DIO', frequency=732)
+        :type dirport1: None, str
 
-        See also set_dutycycle
+        :param dirport2: Same as `dirport1`.
+            It's used when two PWM outputs are enabled. The ``'DAC'`` option
+            can only be used for one set of direction ports, unless the two
+            motors are running synchronously. For the ``'DIO'`` option,
+            digital ports ``'EIO0'`` and ``'EIO1'`` are used.
+        :type dirport2: None, str
+
+        :param frequency: The PWM signal frequency in Hz.
+            In the case of two PWMs, both will have the same frequency. Valid
+            values are ``183``, ``366`` or ``732``.
+        :type frequency: int
+
+
+        Set 1 PWM for motor control on ``'FIO4'`` with direction ports on
+        ``'DAC0'`` and ``'DAC1'``. The PWM frequency is the default ``366`` Hz:
+
+            >>> lju3.set_pwm(dirport1='DAC')
+
+        Set 2 PWMs on ports ``'FIO4'`` and ``'FIO5'`` with a frequency of
+        ``183`` Hz:
+        
+            >>> lju3.set_pwm(pwmnum=2, frequency=183)
+
+        Set 2 PWMs for motor control on ports ``'FIO4'`` and ``'FIO5'``, using
+        the digital ports ``'FIO6'`` and ``'FIO7'`` for motor 1 direction, and
+        ``'EIO0'`` and ``'EIO1'`` for motor 2 direction. The PWM frequency is
+        ``732`` Hz:
+        
+            >>> lju3.set_pwm(pwmnum=2, dirport1='DIO', dirport2='DIO', frequency=732)
+
+
+        .. note::
+            When using digital ports, a 10 kOhm resistor has to be connected from
+            the LabJack `VS` port to each one of the `DIO` ports to ensure true
+            `high` and `low` states.
 
         """
         # Defining PWM frequency divisors and checking input
@@ -787,45 +731,45 @@ class LabJackU3:
         """
         Set PWM duty cycle value.
 
-        Parameters
-        ----------
-        value1 : float
-            The PWM 1 duty cycle percent value between -100 and 100.
-        value2 : float
-            The PWM 2 duty cycle percent value between -100 and 100.
-        brake1 : bool
-            The motor 1 brake option used when dutycycle is zero.
-            Brake is applied when True. Motor is floating when False.
-        brake2 : bool
-            The motor 2 brake option used when dutycycle is zero.
-            Brake is applied when True. Motor is floating when False.
 
-        Returns
-        -------
-        None.
+        :param value1: The PWM 1 duty cycle percent value between ``-100``
+            and ``100``.
+        :type value1: float
 
-        Example
-        -------
-        Set duty cycle to 50% on PWM 1
-        >>> lju3.set_dutycycle(value1=50)
+        :param value2: The PWM 2 duty cycle percent value between ``-100``
+            and ``100``.
+        :type value2: float
 
-        Set duty cycle to 25% (reverse rotation) on PWM 2.
-        >>> lju3.set_dutycycle(value2=-25)
+        :param brake1: The motor 1 brake option used when dutycycle is zero.
+            Brake is applied when ``True``. Motor is floating when ``False``.
+        :type brake1: bool
 
-        Set duty cycle to 20% and 40% on PWMs 1 and 2.
-        >>> lju3.set_dutycycle(value1=20, value2=40)
+        :param brake2: The motor 2 brake option used when dutycycle is zero.
+            Brake is applied when ``True``. Motor is floating when ``False``.
+        :type brake2: bool
 
-        Stop motor 2 and apply brake.
-        >>> lju3.set_dutycycle(value2=0, brake2=True)
 
-        Notes
-        -----
-        1.  Avoid suddenly switching the direction of the motor to avoid
-            damaging the motor and any gear train.
-        2.  You can use the brake option True to hold the motor in position.
+        Set duty cycle to ``50`` % on PWM 1:
 
-        See also set_pwm
-        
+            >>> lju3.set_dutycycle(value1=50)
+
+        Set duty cycle to ``25`` % (reverse rotation) on PWM 2:
+
+            >>> lju3.set_dutycycle(value2=-25)
+
+        Set duty cycle to ``20`` % and ``40`` % on PWMs 1 and 2:
+  
+            >>> lju3.set_dutycycle(value1=20, value2=40)
+
+        Stop motor 2 and apply brake:
+
+            >>> lju3.set_dutycycle(value2=0, brake2=True)
+
+
+        .. note::
+            1. Avoid suddenly switching the direction of rotation to avoid damaging the motor.
+            2. You can use the brake option True to hold the motor in position.
+
         """
         values = [value1, value2]
         brakes = [brake1, brake2]
@@ -885,28 +829,23 @@ class LabJackU3:
     # QUADRATURE ENCODER METHODS
     def set_quadrature(self, zphase1=False):
         """
-        Configure quadrature encoder input on ports FIO4 and FIO5
+        Configure quadrature encoder input on ports ``'FIO4'`` and ``'FIO5'``.
 
-        Parameters
-        ----------
-        zphase1 : bool
-            The logic value indicating if a Z-phase reference pulse is used
-            on port FIO6. The default value is False.
 
-        Returns
-        -------
-        None.
+        :param zphase1: The logic value indicating if a `Z` phase reference
+            pulse is used on port ``'FIO6'``. 
+        :type zphase1: bool
 
-        Example
-        -------
-        Set ports FIO4 and FIO5 for encoder phase A and B signals.
-        >>> lju3.set_quadrature()
 
-        Set ports FIO4 and FIO5 for encoder phase A and B signals
-        and port FIO6 for the reference Z phase.
-        >>> lju3.set_quadrature(zphase1=True)
+        Set ports ``'FIO4'`` and ``'FIO5'`` for encoder phase `A` and `B`
+        signals:
+        
+            >>> lju3.set_quadrature()
 
-        See also get_counter, reset_counter
+        Set ports ``'FIO4'`` and ``'FIO5'`` for encoder phase `A` and `B`
+        signals and port ``'FIO6'`` for the reference `Z` phase:
+            
+            >>> lju3.set_quadrature(zphase1=True)
 
         """
         # Checking input arguments
@@ -947,24 +886,17 @@ class LabJackU3:
         """
         Get current quadrature counter value.
 
-        Parameters
-        ----------
-        None
 
-        Returns
-        -------
-        value : int
-            The counter value
+        :returns: The counter value.
+        :rtype: int
 
-        Example
-        -------
-        Get current counter value
-        >>> lju3.get_counter()
+        
+            >>> lju3.get_counter()
 
-        Notes
-        -----
-        1.  Because the qudrature counter counts rising and falling edges
-            of phases A and B, a 1024 pulse/rev encoder will generate 4096
+
+        .. note::
+            Because the qudrature counter counts rising and falling edges
+            of phases `A` and `B`, a 1024 pulse/rev encoder will generate 4096
             counts for a full shaft turn.
 
         """
@@ -975,22 +907,10 @@ class LabJackU3:
         """
         Reset quadrature counter value.
 
-        Parameters
-        ----------
-        None
+            >>> lju3.reset_counter()
 
-        Returns
-        -------
-        None
-
-        Example
-        -------
-        Resets current counter value
-        >>> lju3.reset_counter()
-
-        Notes
-        -----
-        1.  The count is only reset when a Z phase isn't being used.
+        .. note::
+            The count is only reset when a `Z` phase isn't being used.
 
         """
         if not self._zphase1:
@@ -1004,26 +924,24 @@ class LabJackU3:
     # OTHER METHODS
     def get_labjacktemp(self, unit='C'):
         """
-        Get LabJack's temperature from internal sensor.
+        Get ambient temperature from LabJack's internal sensor.
 
-        Parameters
-        ----------
-        unit : str
-            The temperature measurement unit.
-            Valid values are `C` or `F'. Default unit is `C`.
 
-        Returns
-        -------
-        value : float
-            The internal sensor temperature reading
+        :param unit: The temperature measurement unit.
+            Valid values are ``'C'`` or ``'F'``. Default unit is ``'C'``.
+        :type unit: str
 
-        Example
-        -------
-        Get temperature reading in deg. C
-        >>> lju3.get_labjacktemp()
+        :returns: The internal sensor temperature reading.
+        :rtype: float
 
-        Get temperature reading in deg. F
-        >>> lju3.get_labjacktemp(unit='F')
+
+        Get temperature reading in `Celsius`:
+
+            >>> lju3.get_labjacktemp()
+
+        Get temperature reading in `Fahrenheit`:
+        
+            >>> lju3.get_labjacktemp(unit='F')
 
         """
         tempabs = eGet(self._commhandle.handle, LJ_ioGET_AIN, 30, 0, 0)
@@ -1037,7 +955,7 @@ class LabJackU3:
         return temp
 
     # HELPER METHODS (PRIVATE)
-    def _eGetArray(self, Handle, IOType, Channel, pValue, x1):
+    def _eGetArray(self, Handle, IOType, Port, pValue, x1):
         """
         Perform one call to the LabJack Device returning a data array.
         
@@ -1049,7 +967,7 @@ class LabJackU3:
         pv = ctypes.c_double(pValue)
         xv = (ctypes.c_double * len(x1))()
         ec = self._staticlib.eGet_DblArray(
-            Handle, IOType, Channel, ctypes.byref(pv), ctypes.byref(xv))
+            Handle, IOType, Port, ctypes.byref(pv), ctypes.byref(xv))
         if ec != 0:
             raise LabJackException(ec)
         return pv.value, xv
@@ -1125,47 +1043,34 @@ class LabJackU6:
     """
     The class to represent the LabJack U6
 
+
+    :param serialnum: The device serial number.
+    :type serialnum: int
+
     Ports that are made available with this class are:
-    - Analog Output (0 to 5V) : 'DAC0' , 'DAC1'
-    - Analog Input (+/-10V)   : 'AIN0' , 'AIN1' , ... , 'AIN13'
-    - Digital I/O             : 'DIO0' , 'DIO1' , ... , 'DIO22'
 
-    Properties
-    ----------
-    (none public)
+        * Analog Output (0 to 5V) : ``'DAC0'`` , ``'DAC1'``
+        * Analog Input (+/-10V)   : ``'AIN0'`` , ``'AIN1'``, ... , ``'AIN13'``
+        * Digital I/O             : ``'FIO0'`` , ``'FIO1'``, ... , ``'FIO7'``
+        * Digital I/O             : ``'EIO0'`` , ``'EIO1'``, ... , ``'EIO7'``
 
-    Methods
-    -------
-    close ............ Closes the LabJack device 
-    display_info ..... Displays summary info about the device
-    set_digital ...... Writes digital value to specified port(s)
-    get_digital ...... Reads digital value from specified port(s)
-    set_analog ....... Writes analog value to specified port(s)
-    get_analog ....... Reads analog value from specified port(s)
-    get_labjacktemp .. Gets LabJack internal temperature
-    set_stream ....... Sets LabJack configuration for data streaming
-    get_stream ....... Gets streaming data
-    stop_stream ...... Stops data streaming
-    set_pwm .......... Sets LabJack configuration for PWM output
-    set_dutycycle .... Sets duty cycle of PWM output (-100 to 100)
-    set_quadrature ... Sets LabJack configuration for encoder A-B-Z input
-    get_counter ...... Gets edge count from encoder A-B signals
-    reset_counter .... Resets edge counter
+    Device-specific methods:
 
-    get_bitdir ....... Gets digital port bit direction
-    set_range ........ Sets analog input voltage range
-    set_pwm_quad ..... Sets simultaneous PWM output and encoder input
+        * `get_bitdir` - Gets digital port bit direction
+        * `set_range` - Sets analog input voltage range
+        * `set_pwm_quad` - Sets simultaneous PWM output and encoder input
 
-    Example
-    -------
-    Connect to the first found U6.
-    >>> from labjack_unified.devices import LabJackU6
-    >>> lju6 = LabJackU6()
-    >>> lju6.display_info()
-    >>> lju6.close()
 
-    You can also connect to a specific device using its serial number.
-    >>> lju6 = LabJackT7(370012345)
+    Connect to the first found U6:
+
+        >>> from labjack_unified.devices import LabJackU6
+        >>> lju6 = LabJackU6()
+        >>> lju6.display_info()
+        >>> lju6.close()
+
+    You can also connect to a specific device using its serial number:
+
+        >>> lju6 = LabJackU6(370012345)
 
     """
     # CONSTRUCTOR METHODS
@@ -1196,10 +1101,20 @@ class LabJackU6:
             print('Opened LabJack', self._serialnum)
 
     def close(self):
+        """
+        Close the U6 device connection.
+
+        >>> lju6.close()
+
+        """
         self._staticlib.Close(self._commhandle.handle)
         print('Closed LabJack', self._serialnum)
 
     def display_info(self):
+        """
+        Displays a summary with the U6 device information.
+        
+        """
         print('____________________________________________________________')
         print('Device Name........', self._type)
         print('Serial Number......', self._serialnum)
@@ -1214,24 +1129,18 @@ class LabJackU6:
         Write the digital state to an output port.
         It also sets the port direction to output.
 
-        Parameters
-        ----------
-        name : str
-            The port name to set the state.
-        state : int
-            The digital state 0 = Low, 1 = High.
 
-        Returns
-        -------
-        None.
+        :param name: The port name to set the state.
+        :type name: str
 
-        Example
-        -------
-        Set port FIO0 output to high
-        >>> lju6.set_digital('FIO0', 1)
+        :param state: The digital state `0 = Low`, `1 = High`.
+        :type state: int
 
-        Set port FIO1 output to low
-        >>> lju6.set_digital('FIO1', 0)
+
+        Set port ``'FIO0'`` output to high and port ``'FIO1'`` to low:
+
+            >>> lju6.set_digital('FIO0', 1)
+            >>> lju6.set_digital('FIO1', 0)
 
         """
         # Checking for valid inputs
@@ -1248,20 +1157,17 @@ class LabJackU6:
         Read the digital state from an input port.
         It also sets the port direction to input.
 
-        Parameters
-        ----------
-        name : str
-            The port name to get the state.
 
-        Returns
-        -------
-        state : int
-            The state of the digital port. 0 = Low, 1 = High.
+        :param name: The port name to get the state.
+        :type name: str
 
-        Example
-        -------
-        Get port FIO2 input state
-        >>> lju6.get_digital('FIO2')
+        :returns: The state of the digital port. `0 = Low`, `1 = High`.
+        :rtype: int
+
+
+        Get port ``'FIO2'`` input state:
+
+            >>> lju6.get_digital('FIO2')
 
         """
         # Checking for valid inputs
@@ -1276,19 +1182,16 @@ class LabJackU6:
         """
         Read the direction of the digital port.
 
-        Parameters
-        ----------
-        name : str
-            The port name to get the direction.
 
-        Returns
-        -------
-        bitdir : str
-            The direction of the digital port. `Input` or `Output`
+        :param name: The port name to get the direction.
+        :type name: str
 
-        Example
-        -------
-            Get the direction of port FIO2
+        :returns: The direction of the digital port. `Input` or `Output`.
+        :rtype: str
+
+
+        Get the direction of port ``'FIO2'``:
+
             >>> lju6.get_bitdir('FIO2')
 
         """
@@ -1308,21 +1211,17 @@ class LabJackU6:
         """
         Set analog output voltage.
 
-        Parameters
-        ----------
-        name : str
-            The port name to set the output voltage.
-            Available ports are 'DAC0' and 'DAC1'.
-        value : float
-            The output voltage between 0 and 5 V.
 
-        Returns
-        -------
-        None.
+        :param name: The port name to set the output voltage.
+            Available ports are ``'DAC0'`` and ``'DAC1'``.
+        :type name: str
 
-        Example
-        -------
-            Set port DAC1 output voltage to 2.2 V.
+        :param value: The output voltage between ``0`` and ``5`` V.
+        :type value: float
+
+
+        Set port ``'DAC1'`` output voltage to ``2.2`` V:
+
             >>> lju6.set_analog('DAC1', 2.2)
 
         """
@@ -1341,32 +1240,33 @@ class LabJackU6:
         """
         Get analog input voltage.
 
-        Parameters
-        ----------
-        namepos : str
-            The positive port name to get the voltage.
-        *mode : str
-            Can be one of the two options:
-            - `Single-Ended` (default value)
-            - `Differential' sets the ports to get a differential voltage.
 
-        Returns
-        -------
-        value : float
-            The input voltage value
+        :param name: The positive port name to get the voltage.
+        :type name: str
 
-        Example
-        -------
-        Get single-ended voltage on port AIN3
-        >>> lju6.get_analog('AIN3')
+        :param mode: Can be one of the two options:
 
-        Get differential voltage betweens ports AIN2 and AIN3
-        >>> lju6.get_analog('AIN2', 'Differential')
+            * ``'single-ended'`` (default value)
+            * ``'differential'`` sets the ports to get a differential voltage.
 
-        Notes
-        -----
-        Differential reading uses two consecutive even-odd ports.
-        Valid ports for differential reading are AIN0/2/4/6/8/10/12.
+        :type mode: str
+
+        :returns: The input voltage value.
+        :rtype: float
+
+
+        Get ``'single-ended'`` voltage on port ``'AIN3'``:
+
+            >>> lju6.get_analog('AIN3')
+
+        Get ``'differential'`` voltage betweens ports ``'AIN2'`` and
+        ``'AIN3'``:
+        
+            >>> lju6.get_analog('AIN2', 'differential')
+
+        .. note::
+            Differential reading uses two consecutive even-odd ports.
+            Valid ports for differential reading are AIN0/2/4/6/8/10/12.
 
         """
         # Checking for valid inputs
@@ -1397,37 +1297,36 @@ class LabJackU6:
         """
         Set and start data streaming.
 
-        Parameters
-        ----------
-        names : str, list
-            The U6 channel name(or list of channel names) to be streamed.
-        scanrate : int
-            The scan rate (Hz) of the data streaming. The default (and maximum)
-            value is 50000 Hz. The effective scan frequency of each channel is
-            the scan rate divided by the number of scanned channels. 
-        readrate : float
-            The rate in seconds at which blocks of data are retrieved from
-            the data buffer. The default value is 0.5 seconds.
 
-        Returns
-        -------
-        None.
+        :param name: The U6 port name (or list of names) to be streamed.
+        :type name: str, list(str)
 
-        Example
-        -------
-        Set data streaming from port AIN0 at 25 kHz every 0.5 s
-        >>> lju6.set_stream('AIN0', scanrate=25000, readrate=0.5)
+        :param scanrate:  The scan rate (Hz) of the data streaming. 
+            The default (and maximum) value is ``50000`` Hz. The effective scan
+            frequency of each port is the scan rate divided by the number of
+            scanned ports.
+        :type scanrate: int
 
-        Set data streaming from port AIN0 and AIN1 at 50 kHz every 1.0 s
-        (The effective scan frequency of each channel is 25 kHz)
-        >>> lju6.set_stream(['AIN0', 'AIN1'], scanrate=50000, readrate=1.0)
+        :param readrate:
+            The rate in seconds at which blocks of data are retrieved from the
+            data buffer. The default value is ``0.5`` seconds.
+        :type readrate: float
 
-        Notes
-        -----
-        Only analog input channels can be streamed. While it is possible to
-        stream digital channels, that hasn't been implemented in this release.
 
-        See also get_stream, stop_stream
+        Set data streaming on port ``'AIN0'`` at ``25000`` Hz, every ``0.5`` s:
+            
+            >>> lju6.set_stream('AIN0', scanrate=25000, readrate=0.5)
+
+        Set data streaming on ports ``'AIN0'`` and ``'AIN1'`` at ``50000`` Hz,
+        every ``1.0`` s:
+
+            >>> lju6.set_stream(['AIN0', 'AIN1'], scanrate=50000, readrate=1.0)
+
+
+        .. note::
+            Only analog input ports ``'AIN0'`` to ``'AIN13'`` can be
+            streamed. While it's possible to stream digital ports,
+            that hasn't been implemented in this release.
 
         """
         # Assigning streamed data block read-in rate (s)
@@ -1445,13 +1344,13 @@ class LabJackU6:
         portnum = []
         for name in names:
             portnum.append(self._get_AINnumber(name))
-        # Assigning number of streaming channels
+        # Assigning number of streaming ports
         self._streamnumchannels = len(portnum)
-        # Updating scan frequency per channel (Hz)
+        # Updating scan frequency per port (Hz)
         self._streamscanfreq = int(self._scanrate/self._streamnumchannels)
-        # Clearing streaming channels
+        # Clearing streaming ports
         ePut(self._commhandle.handle, LJ_ioCLEAR_STREAM_CHANNELS, 0, 0, 0)
-        # Adding channels to scan list
+        # Adding ports to scan list
         for num in portnum:
             ePut(self._commhandle.handle, LJ_ioADD_STREAM_CHANNEL, num, 0, 0)
         # Assigning scanning frequency
@@ -1470,20 +1369,7 @@ class LabJackU6:
         """
         Stop data streaming.
 
-        Parameters
-        ----------
-        None.
-
-        Returns
-        -------
-        None.
-
-        Example
-        -------
-        Stopping data streaming
-        >>> lju6.stop_stream()
-
-        See also set_stream, get_stream
+            >>> lju6.stop_stream()
 
         """
         ePut(self._commhandle.handle, LJ_ioSTOP_STREAM, 0, 0, 0)
@@ -1492,35 +1378,41 @@ class LabJackU6:
         """
         Get streaming data block.
 
-        Parameters
-        ----------
-        None.
 
-        Returns
-        -------
-        dt : float
-            The sampling period (s) between each data point.
-        data : ndarray
-            The numpy m-by-n array containing the streamed data where
-            m is the number of samples per channel in the block and n
-            is the number of channels defined in set_stream()
-        numscans : int
-            The actual number of scans per channel in the data block.
-        commbacklog : float
-            The communication backlog in % (increasing values indicate
-            that the computer cannot keep up with the data download from
-            the U6 driver)
-        devbacklog : float
-            The U6 device backlog in % (increasing values indicate that
-            the U6 device cannot keep up with the data streaming - usually
-            not the case)
+        :returns: 5-tuple
 
-        Example
-        -------
-        Retrieving scan period, data, and scan info
-        >>> dt, datablock, numscans, commbacklog, U6backlog = lju6.get_stream()
+            * dt
+            
+                The sampling period (s) between each data point.
 
-        See also set_stream, stop_stream
+            * data
+
+                The numpy `m-by-n` array containing the streamed data where
+                `m` is the number of samples per port in the block and `n`
+                is the number of ports defined in `set_stream`
+
+            * numscans
+            
+                The actual number of scans per port in the data block.
+
+            * commbacklog
+            
+                The communication backlog in % (increasing values indicate that
+                the computer cannot keep up with the data download from the U6
+                driver)
+
+            * devbacklog
+            
+                The U6 device backlog in % (increasing values indicate that the
+                device cannot keep up with the data streaming - usually not
+                the case)
+
+        :rtype: (float, ndarray, int, float, float)
+
+
+        Retrieve scan period, data, and scan info:
+
+            >>> dt, datablock, numscans, commbacklog, U3backlog = lju6.get_stream()
 
         """
         # Defining initial number of samples per channnel
@@ -1531,7 +1423,7 @@ class LabJackU6:
         numscansactual, datalong = self._eGetArray(
             self._commhandle.handle, LJ_ioGET_STREAM_DATA,
             LJ_chALL_CHANNELS, numscans, datasamples)
-        # Separating channels
+        # Separating ports
         numscansactual = int(numscansactual)
         nrow = numscansactual
         ncol = self._streamnumchannels
@@ -1555,49 +1447,57 @@ class LabJackU6:
         """
         Configure PWM output.
 
-        Parameters
-        ----------
-        pwmnum : int
-            The number of PWM output signals. 1 or 2 PWMs can be used.
-            For one PWM, the output port is FIO0. For two PWMs, the output
-            ports are FIO0 and FIO1
-        dirport1 : str
-            The type of ports that control the PWM "direction" for electric
-            motor control. There are three options:
-            - None  - Defaul value (no direction ports are used)
-            - 'DAC' - Uses analog ports DAC0 and DAC1
-            - 'DIO' - Uses digital ports FIO2 and FIO3
-            When using digital ports, a 10 kOhm resistor has to be connected
-            from the LabJack VS port to each one of the DIO ports to ensure
-            true 'high' and 'low' states.
-        dirport2 : str
-            Same as `dirport1`. It's used when two PWM outputs are enabled.
-            The 'DAC' option can only be used for one set of direction ports,
-            unless the two motors are running synchronously. For the 'DIO'
-            option, digital ports FIO4 and FIO5 are used.
-        frequency : int
-            The PWM signal frequency in Hz. In the case of two PWMs, both will
-            have the same frequency. Valid values are 183, 366 or 732.
 
-        Returns
-        -------
-        None.
+        :param pwmnum: The number of PWM output signals.
+            ``1`` or ``2`` PWMs can be used. For one PWM, the output port is
+            ``'FIO0'``. For two PWMs, the output ports are ``'FIO0'`` and 
+            ``'FIO1'``.
+        :type pwmnum: int
 
-        Example
-        -------
-        Set 1 PWM for motor control on FIO0 with direction ports on DAC0 and
-        DAC1. The PWM frequency is the default 366 Hz.
-        >>> lju6.set_pwm(dirport1='DAC')
+        :param dirport1: The type of ports that control the PWM `direction`
+            for electric motor control. There are three options:
 
-        Set 2 PWMs with a frequency of 183 Hz.
-        >>> lju6.set_pwm(pwmnum=2, frequency=183)
+            * ``None``  - Default value (no direction ports are used)
+            * ``'DAC'`` - Uses analog ports ``'DAC0'`` and ``'DAC1'``
+            * ``'DIO'`` - Uses digital ports ``'FIO2'`` and ``'FIO3'``
 
-        Set 2 PWMs for motor control on ports FIO0 and FIO1, using the digital
-        ports FIO2 and FIO3 for motor 1 direction, and FIO4 and FIO5 for motor
-        2 direction. The PWM frequency is 732 Hz
-        >>> lju6.set_pwm(pwmnum=2, dirport1='DIO', dirport2='DIO', frequency=732)
+        :type dirport1: None, str
 
-        See also set_dutycycle
+        :param dirport2: Same as `dirport1`.
+            It's used when two PWM outputs are enabled. The ``'DAC'`` option
+            can only be used for one set of direction ports, unless the two
+            motors are running synchronously. For the ``'DIO'`` option,
+            digital ports ``'FIO4'`` and ``'FIO5'`` are used.
+        :type dirport2: None, str
+
+        :param frequency: The PWM signal frequency in Hz.
+            In the case of two PWMs, both will have the same frequency. Valid
+            values are ``183``, ``366`` or ``732``.
+        :type frequency: int
+
+
+        Set 1 PWM for motor control on ``'FIO0'`` with direction ports on
+        ``'DAC0'`` and ``'DAC1'``. The PWM frequency is the default ``366`` Hz:
+
+            >>> lju6.set_pwm(dirport1='DAC')
+
+        Set 2 PWMs on ports ``'FIO0'`` and ``'FIO1'`` with a frequency of
+        ``183`` Hz:
+        
+            >>> lju6.set_pwm(pwmnum=2, frequency=183)
+
+        Set 2 PWMs for motor control on ports ``'FIO0'`` and ``'FIO1'``, using
+        the digital ports ``'FIO2'`` and ``'FIO3'`` for motor 1 direction, and
+        ``'FIO4'`` and ``'FIO5'`` for motor 2 direction. The PWM frequency is
+        ``732`` Hz:
+        
+            >>> lju6.set_pwm(pwmnum=2, dirport1='DIO', dirport2='DIO', frequency=732)
+
+
+        .. note::
+            When using digital ports, a 10 kOhm resistor has to be connected from
+            the LabJack `VS` port to each one of the `DIO` ports to ensure true
+            `high` and `low` states.
 
         """
         # Setting flag for simultaneous PWN and quadrature setup
@@ -1670,45 +1570,50 @@ class LabJackU6:
         """
         Set PWM duty cycle value.
 
-        Parameters
-        ----------
-        value1 : float
-            The PWM 1 duty cycle percent value between -100 and 100.
-        value2 : float
-            The PWM 2 duty cycle percent value between -100 and 100.
-        brake1 : bool
-            The motor 1 brake option used when dutycycle is zero.
-            Brake is applied when True. Motor is floating when False.
-        brake2 : bool
-            The motor 2 brake option used when dutycycle is zero.
-            Brake is applied when True. Motor is floating when False.
 
-        Returns
-        -------
-        None.
+        :param value1: The PWM 1 duty cycle percent value between ``-100``
+            and ``100``.
+        :type value1: float
 
-        Example
-        -------
-        Set duty cycle to 50% on PWM 1
-        >>> lju6.set_dutycycle(value1=50)
+        :param value2: The PWM 2 duty cycle percent value between ``-100``
+            and ``100``.
+        :type value2: float
 
-        Set duty cycle to 25% (reverse rotation) on PWM 2.
-        >>> lju6.set_dutycycle(value2=-25)
+        :param brake1: The motor 1 brake option used when dutycycle is zero.
+            Brake is applied when ``True``. Motor is floating when ``False``.
+        :type brake1: bool
 
-        Set duty cycle to 20% and 40% on PWMs 1 and 2.
-        >>> lju6.set_dutycycle(value1=20, value2=40)
+        :param brake2: The motor 2 brake option used when dutycycle is zero.
+            Brake is applied when ``True``. Motor is floating when ``False``.
+        :type brake2: bool
 
-        Stop motor 2 and apply brake.
-        >>> lju6.set_dutycycle(value2=0, brake2=True)
 
-        Notes
-        -----
-        1.  Avoid suddenly switching the direction of the motor to avoid
-            damaging the motor and any gear train.
-        2.  You can use the brake option True to hold the motor in position.
+        Set duty cycle to ``50`` % on PWM 1:
 
-        See also set_pwm
-        
+            >>> lju6.set_dutycycle(value1=50)
+
+        Set duty cycle to ``25`` % (reverse rotation) on PWM 2:
+
+            >>> lju6.set_dutycycle(value2=-25)
+
+        Set duty cycle to ``20`` % and ``40`` % on PWMs 1 and 2:
+  
+            >>> lju6.set_dutycycle(value1=20, value2=40)
+
+        Stop motor 2 and apply brake:
+
+            >>> lju6.set_dutycycle(value2=0, brake2=True)
+
+
+        .. note::
+            1. Avoid suddenly switching the direction of rotation to avoid damaging the motor.
+            2. You can use the brake option True to hold the motor in position.
+
+        .. note::
+            If the method `set_pwm_quad` was used to configure both a PWM and
+            a quadrature encoder, use only `value1` and `brake1` to control
+            the motor output.
+
         """
         values = [value1, value2]
         brakes = [brake1, brake2]
@@ -1772,43 +1677,43 @@ class LabJackU6:
     # QUADRATURE ENCODER METHODS
     def set_quadrature(self, quadnum=1, zphase1=False, zphase2=False):
         """
-        Configure quadrature encoder input.
+        Configure quadrature encoder input on ports ``'FIO4'`` and ``'FIO5'``.
 
-        Parameters
-        ----------
-        quadnum : int
-            The number of quadrature input signals. 1 or 2 encoders can be
-            used. For one encoder, the input ports are FIO0 and FIO1. For two
-            encoders, the input ports for the second one are FIO2 and FIO3.
-        zphase1 : bool
-            The logic value indicating if a Z-phase reference pulse is used
-            for the first encoder. Port FIO2 is used if `quadnum=1`. Port FIO4
-            is used if `quadnum=2`.
-        zphase2 : bool
-            The logic value indicating if a Z-phase reference pulse is used
-            for the second encoder. Port FIO4 is used for the first encoder
-            and port FIO5 is used for the second encoder. `zphase2` is ignored
-            if `quadnum=1`.
 
-        Returns
-        -------
-        None.
+        :param quadnum: The number of quadrature input signals.
+            ``1`` or ``2`` encoders can be used. For one encoder, the input
+            ports are ``'FIO0'`` and ``'FIO1'``. For two encoders, the input
+            ports for the second one are ``'FIO2'`` and ``'FIO3'``. 
+        :type quadnum: int
 
-        Example
-        -------
-        Set ports FIO0 and FIO1 for encoder with phase A and B signals only.
-        >>> lju6.set_quadrature()
+        :param zphase1: The logic value indicating if a `Z` phase reference
+            pulse is used for the first encoder. Port ``'FIO2'`` is used if
+            `quadnum` = ``1``. Port ``'FIO4'`` is used if `quadnum` = ``2``. 
+        :type zphase1: bool
 
-        Set ports FIO0 and FIO1 for encoder phase A and B signals and port
-        FIO2 for the reference Z phase.
-        >>> lju6.set_quadrature(zphase1=True)
+        :param zphase2: The logic value indicating if a `Z` phase reference
+            pulse is used for the second encoder. Port ``'FIO4'`` is used for
+            the first encoder and port ``'FIO5'`` is used for the second 
+            encoder. `zphase2` is ignored if `quadnum` = ``1``.
+        :type zphase1: bool
 
-        Set 2 encoders with Z phase. A and B phases are on ports FIO0 and FIO1
-        for encoder 1, and FIO2 and FIO3 for encoder 2. The Z phase ports are
-        respectively FIO4 and FIO5.
-        >>> lju6.set_quadrature(quadnum=2, zphase1=True, zphase2=True)
 
-        See also get_counter, reset_counter
+        Set ports ``'FIO0'`` and ``'FIO1'`` for encoder with phase `A` and `B`
+        signals only:
+        
+            >>> lju6.set_quadrature()
+
+        Set ports ``'FIO0'`` and ``'FIO1'`` for encoder phase `A` and `B`
+        signals, and port ``'FIO2'`` for the reference `Z` phase:
+        
+            >>> lju6.set_quadrature(zphase1=True)
+
+        Set 2 encoders with `Z` phase. `A` and `B` phases are on ports
+        ``'FIO0'`` and ``'FIO1'`` for encoder 1, and ``'FIO2'`` and ``'FIO3'``
+        for encoder 2. The `Z` phase ports are respectively ``'FIO4'`` and
+        ``'FIO5'``:
+
+            >>> lju6.set_quadrature(quadnum=2, zphase1=True, zphase2=True)
 
         """
         # Setting flag for simultaneous PWN and quadrature setup
@@ -1827,7 +1732,7 @@ class LabJackU6:
             if zphase2:
                 portnumZ[1] = 32768 + self._get_DIOnumber('FIO5')
         else:
-            raise Exception('Only 1 or 2 quadrature inputd can be assigned.')
+            raise Exception('Only 1 or 2 quadrature inputs can be assigned.')
         # Assigning quadrature attributes
         self._zphase = [zphase1, zphase2]
         self._quadnum = quadnum
@@ -1863,24 +1768,17 @@ class LabJackU6:
         """
         Get current quadrature counter value.
 
-        Parameters
-        ----------
-        None
 
-        Returns
-        -------
-        value : int, list
-            The counter value or a list with 2 values for 2 encoders.
+        :returns: The counter value or a list with 2 values for 2 encoders.
+        :rtype: int, list(int)
 
-        Example
-        -------
-        Gets current counter value or list of values
+        
         >>> lju6.get_counter()
 
-        Notes
-        -----
-        1.  Because the qudrature counter counts rising and falling edges
-            of phases A and B, a 1024 pulse/rev encoder will generate 4096
+
+        .. note::
+            Because the qudrature counter counts rising and falling edges
+            of phases `A` and `B`, a 1024 pulse/rev encoder will generate 4096
             counts for a full shaft turn.
 
         """
@@ -1895,30 +1793,31 @@ class LabJackU6:
         """
         Reset quadrature counter value.
 
-        Parameters
-        ----------
-        counter1 : bool
-            The flag indicating whether to reset counter 1 or not.
-            The default value is True and it resets the counter.
-        counter2 : bool
-            The flag indicating whether to reset counter 2 or not.
-            The default value is True and it resets the counter.
 
-        Returns
-        -------
-        None
+        :param counter1: The flag indicating whether to reset counter 1 or not.
+            The default value is ``True`` and it resets the counter.
+        :type counter1: bool
 
-        Example
-        -------
+        :param counter2: The flag indicating whether to reset counter 2 or not.
+            The default value is ``True`` and it resets the counter.
+        :type counter2: bool
+
+
         Resets current counter value of all encoders.
-        >>> lju6.reset_counter()
+
+            >>> lju6.reset_counter()
 
         Resets current counter value only for second encoder.
-        >>> lju6.reset_counter(counter1=False)
+        
+            >>> lju6.reset_counter(counter1=False)
 
-        Notes
-        -----
-        1.  The count is only reset when a Z phase isn't being used.
+
+        .. note::
+            The count is only reset when a `Z` phase isn't being used.
+
+        .. note::
+            If the method `set_pwm_quad` was used to configure both a PWM and
+            a quadrature encoder, use only `counter1` to reset the counter.
 
         """
         if not self._zphase[0] and counter1:
@@ -1941,45 +1840,40 @@ class LabJackU6:
     def set_pwm_quad(self, dirport='DAC', zphase=False):
         """
         Configure 1 PWM output and 1 quadrature input.
-        The PWM port is FIO2 and the phases A and B ports are respectively
-        FIO0 and FIO1.
+        The PWM port is ``'FIO2'`` and the phases `A` and `B` ports are
+        respectively ``'FIO0'`` and ``'FIO1'``.
 
-        Parameters
-        ----------
-        dirport : str
-            The type of ports that control the PWM "direction" for electric
-            motor control. There are three options:
-            - None  - Defaul value (no direction ports are used)
-            - 'DAC' - Uses analog ports DAC0 and DAC1
-            - 'DIO' - Uses digital ports FIO4 and FIO5
-            When using digital ports, a 10 kOhm resistor has to be connected
-            from the LabJack VS port to each one of the DIO ports to ensure
-            true 'high' and 'low' states.
-        zphase : bool
-            The logic value indicating if a Z-phase reference pulse is used
-            for the encoder. The port used in this configuration is FIO3.
 
-        Returns
-        -------
-        None.
+        :param dirport: The type of ports that control the PWM `direction`
+            for electric motor control. There are three options:
 
-        Example
-        -------
-        Set a PWM for motor control on FIO2 with direction ports on DAC0 and
-        DAC1. The encoder A and B ports are FIO0 and FIO1.
-        >>> lju6.set_pwm_quad(dirport='DAC')
+            * ``None``  - Default value (no direction ports are used)
+            * ``'DAC'`` - Uses analog ports ``'DAC0'`` and ``'DAC1'``
+            * ``'DIO'`` - Uses digital ports ``'FIO4'`` and ``'FIO5'``
 
-        Set a PWM for motor control on FIO2 with direction ports on FIO4 and
-        FIO5. The A-B-Z encoder A and B ports are FIO0 and FIO1. The Z-phase
-        is on port FIO3
-        >>> lju6.set_pwm_quad(dirport='DIO', zphase=True)
+        :type dirport1: None, str
 
-        Notes
-        -----
-        Due to limitations with internal clocks under this configuration, the
-        PWM frequency is fixed at 732 Hz.
+        :param zphase: The logic value indicating if a `Z` phase reference
+            pulse is used on port ``'FIO3'``. 
+        :type zphase: bool
 
-        See also set_dutycycle
+
+        Set a PWM for motor control on ``'FIO2'`` with direction ports on
+        ``'DAC0'`` and ``'DAC1'``. The encoder `A` and `B` ports are ``'FIO0'``
+        and ``'FIO1'``:
+
+            >>> lju6.set_pwm_quad(dirport='DAC')
+
+        Set a PWM for motor control on ``'FIO2'`` with direction ports on
+        ``'FIO4'`` and ``'FIO5'``. The A-B-Z encoder `A` and `B` ports are
+        ``'FIO0'`` and ``'FIO1'``. The `Z` phase is on port ``'FIO3'``:
+
+            >>> lju6.set_pwm_quad(dirport='DIO', zphase=True)
+
+
+        .. note::
+            Due to limitations with internal clocks under this configuration,
+            the PWM frequency is fixed at 732 Hz.
 
         """
         # Setting flag for simultaneous PWN and quadrature setup
@@ -2053,31 +1947,30 @@ class LabJackU6:
         """
         Set analog input voltage range.
 
-        Parameters
-        ----------
-        names : str, list
-            The analog port(s) that will have their ranges modified.
-            Use `all` to set all analog input ports to the same range.
-        value : float, list
-            The voltage range value to be used.
-            Valid ranges are +/- 10, 1, 0.1, 0.01 V.
-            If a single value is used, it will be applied to all
-            channels in NAMES.
 
-        Returns
-        -------
-        None.
+        :param names: The analog port(s) that will have their ranges modified.
+            Use ``'ALL'`` to set all analog input ports to the same range.
+        :type names: str, list(str)
 
-        Example
-        -------
-        Set port AIN0 with a range of +/- 1 V.
-        >>> lju6.set_range('AIN0', 1)
+        :param ranges: The voltage range value to be used.
+            Valid ranges are +/- ``10``, ``1``, ``0.1``, ``0.01`` V. If a
+            single value is used, it will be applied to all ports in
+            `names`.
+        :type ranges: float, list(float)
 
-        Set port AIN0 and AIN2 with a range of +/- 0.1 and 0.01 V
-        >>> lju6.set_range(['AIN0', 'AIN2'], [0.1, 0.01])
 
-        Set all ports with a (default) range of +/- 10 V
-        >>> lju6.set_range('ALL', 10)
+        Set port ``'AIN0'`` with a range of +/- ``1`` V:
+       
+            >>> lju6.set_range('AIN0', 1)
+
+        Set port ``'AIN0'`` and ``'AIN2'`` with a range of +/- ``0.1`` and
+        ``0.01`` V:
+
+            >>> lju6.set_range(['AIN0', 'AIN2'], [0.1, 0.01])
+
+        Set all ports with a (default) range of +/- ``10`` V:
+        
+            >>> lju6.set_range('ALL', 10)
 
         """
         #
@@ -2109,8 +2002,40 @@ class LabJackU6:
         # Sending command sequence
         GoOne(self._commhandle.handle)
 
+    def get_labjacktemp(self, unit='C'):
+        """
+        Get ambient temperature from LabJack's internal sensor.
+
+
+        :param unit: The temperature measurement unit.
+            Valid values are ``'C'`` or ``'F'``. Default unit is ``'C'``.
+        :type unit: str
+
+        :returns: The internal sensor temperature reading.
+        :rtype: float
+
+
+        Get temperature reading in `Celsius`:
+
+            >>> lju6.get_labjacktemp()
+
+        Get temperature reading in `Fahrenheit`:
+        
+            >>> lju6.get_labjacktemp(unit='F')
+
+        """
+        tempabs = eGet(self._commhandle.handle, LJ_ioGET_AIN, 30, 0, 0)
+        if unit == 'C':
+            temp = tempabs - 273.15
+        elif unit == 'F':
+            temp = 9/5*(tempabs-273.15) + 32
+        else:
+            raise Exception(
+                "Temperature units must be either 'degC' or 'degF'.")
+        return temp
+
     # HELPER METHODS (PRIVATE)
-    def _eGetArray(self, Handle, IOType, Channel, pValue, x1):
+    def _eGetArray(self, Handle, IOType, Port, pValue, x1):
         """
         Perform one call to the LabJack Device returning a data array.
         
@@ -2122,7 +2047,7 @@ class LabJackU6:
         pv = ctypes.c_double(pValue)
         xv = (ctypes.c_double * len(x1))()
         ec = self._staticlib.eGet_DblArray(
-            Handle, IOType, Channel, ctypes.byref(pv), ctypes.byref(xv))
+            Handle, IOType, Port, ctypes.byref(pv), ctypes.byref(xv))
         if ec != 0:
             raise LabJackException(ec)
         return pv.value, xv
@@ -2252,50 +2177,37 @@ class LabJackU6:
 
 class LabJackT7:
     """
-    The class to represent the LabJack T7 multifunction DAQ
+    The class to represent the LabJack T7
+
+
+    :param serialnum: The device serial number.
+    :type serialnum: int
 
     Ports that are made available with this class are:
-    - Analog Output (0 to 5V) : 'DAC0' , 'DAC1'
-    - Analog Input (+/-10V)   : 'AIN0' , 'AIN1' , ... , 'AIN13'
-    - Digital I/O             : 'DIO0' , 'DIO1' , ... , 'DIO22'
 
-    Properties
-    ----------
-    (none public)
+        * Analog Output (0 to 5V) : ``'DAC0'`` , ``'DAC1'``
+        * Analog Input (+/-10V)   : ``'AIN0'`` , ``'AIN1'``, ... , ``'AIN13'``
+        * Digital I/O             : ``'FIO0'`` , ``'FIO1'``, ... , ``'FIO7'``
+        * Digital I/O             : ``'EIO0'`` , ``'EIO1'``, ... , ``'EIO7'``
 
-    Methods
-    -------
-    close ............ Closes the LabJack device 
-    display_info ..... Displays summary info about the device
-    set_digital ...... Writes digital value to specified port(s)
-    get_digital ...... Reads digital value from specified port(s)
-    set_analog ....... Writes analog value to specified port(s)
-    get_analog ....... Reads analog value from specified port(s)
-    get_labjacktemp .. Gets LabJack internal temperature
-    set_stream ....... Sets LabJack configuration for data streaming
-    get_stream ....... Gets streaming data
-    stop_stream ...... Stops data streaming
-    set_PWM .......... Sets LabJack configuration for PWM output
-    set_dutycycle .... Sets duty cycle of PWM output (-100 to 100)
-    set_quadrature ... Sets LabJack configuration for encoder A-B-Z input
-    get_counter ...... Gets edge count from encoder A-B signals
-    reset_counter .... Resets edge counter
+    Device-specific methods:
 
-    set_TC ........... Sets LabJack configuration for thermocouple input
-    get_TCtemp ....... Gets thermocouple temperature reading
-    set_reference .... Sets analog input reference voltage point
-    set_range ........ Sets analog input voltage range
+        * `set_range` - Sets analog input voltage range
+        * `set_reference` - Sets analog input reference voltage point
+        * `set_TC` - Sets LabJack configuration for thermocouple input
+        * `get_TCtemp` - Gets thermocouple temperature reading
 
-    Example
-    -------
-    Connect to the first found T7.
-    >>> from labjack_unified.devices import LabJackT7
-    >>> ljt7 = LabJackT7()
-    >>> ljt7.display_info()
-    >>> ljt7.close()
+
+    Connect to the first found U6:
+
+        >>> from labjack_unified.devices import LabJackT7
+        >>> ljt7 = LabJackT7()
+        >>> ljt7.display_info()
+        >>> ljt7.close()
 
     You can also connect to a specific device using its serial number.
-    >>> ljt7 = LabJackT7(370012345)
+
+        >>> ljt7 = LabJackT7(370012345)
 
     """
     # CONSTRUCTOR METHODS
@@ -2324,10 +2236,20 @@ class LabJackT7:
             print('Opened LabJack', self._serialnum)
 
     def close(self):
+        """
+        Close the T7 device connection.
+
+        >>> ljt7.close()
+
+        """
         ljm.close(self._commhandle)
         print('Closed LabJack', self._serialnum)
 
     def display_info(self):
+        """
+        Displays a summary with the T7 device information.
+        
+        """
         print('____________________________________________________________')
         print('Device Name........', self._type)
         print('Serial Number......', self._serialnum)
@@ -2343,29 +2265,26 @@ class LabJackT7:
         """
         Set analog output voltage.
 
-        Parameters
-        ----------
-        name : str, list
-            The port name to set the output voltage.
-            Available ports are 'DAC0' and 'DAC1'. Both ports can be set at
-            the same time using a list containing the two names.
-        value : float, list
-            The output voltage between 0 and 5 V. A list containing values
-            can be used in conjunction with a list with the two port names.
 
-        Returns
-        -------
-        None.
+        :param name: The port name to set the output voltage.
+            Available ports are ``'DAC0'`` and ``'DAC1'``. Both ports can be
+            set at the same time using a list containing the two names.
+        :type name: str, list(str)
 
-        Example
-        -------
-        Set port DAC1 output voltage to 2.2 V.
-        >>> ljt7.set_analog('DAC1', 2.2)
+        :param value: The output voltage between ``0`` and ``5`` V. A list
+            containing values can be used in conjunction with a list with the
+            two port names.
+        :type value: float, list(float)
 
-        Set port DAC0 output voltage to 2.5 V and DAC1 to 3.2 V
-        >>> ljt7.set_analog(['DAC0', 'DAC1'], [2.5, 3.2])
 
-        See also get_analog
+        Set port ``'DAC1'`` output voltage to ``2.2`` V:
+
+            >>> ljt7.set_analog('DAC1', 2.2)
+
+        Set port ``'DAC0'`` output voltage to ``2.5`` V and ``'DAC1'`` to
+        ``3.2`` V:
+
+            >>> ljt7.set_analog(['DAC0', 'DAC1'], [2.5, 3.2])
 
         """
         # Making sure inputs are lists
@@ -2388,34 +2307,30 @@ class LabJackT7:
 
     def get_analog(self, names):
         """
-        Get analog input voltage
+        Get analog input voltage.
 
-        Parameters
-        ----------
-        names : str, list
-            A character string identifier or a list of identifier `names`
-            can be used to read the voltage on the selected input.
-            Ports AIN0 to AIN13 are possible names and can read a range
-            between -10 and +10V.
 
-        Returns
-        -------
-        value : float, list
-            The input voltage value or a list of values.
+        :param name: THe port name (or list of names) to get the input voltage.
+            Ports ``'AIN0'`` to ``'AIN13'`` are possible names and can read a
+            range between -10 and +10V.
+        :type name: str, list(str)
 
-        Example
-        -------
-        Get input voltage on port AIN0
-        >>> ljt7.get_analog('AIN0')
+        :returns: The input voltage value.
+        :rtype: float, list(float)
 
-        Get input voltages on ports AIN0, AIN2 and AIN3
-        >>> ljt7.get_analog(['AIN0', 'AIN2', 'AIN3'])
 
-        Notes
-        -----
-        1.  Ports that are not connected may have erratic readings.
-        2.  See get_range and set_range to view and modify the input range
-            of the analog input ports
+        Get input voltage on port ``'AIN0'``:
+        
+            >>> ljt7.get_analog('AIN0')
+
+        Get input voltages on ports ``'AIN0'``, ``'AIN2'`` and ``'AIN3'``:
+        
+            >>> ljt7.get_analog(['AIN0', 'AIN2', 'AIN3'])
+
+
+        .. note::
+            1.  Ports that are not connected may have erratic readings.
+            2.  See `set_range` and `set_reference` for more options on analog inputs.
 
         """
         # Making sure inputs are lists
@@ -2432,24 +2347,23 @@ class LabJackT7:
         Write the digital state to an output port.
         It also sets the port direction to output.
 
-        Parameters
-        ----------
-        name : str, list
-            The port name (or a list of port names) to set the state.
-        state : int
-            The digital state (or list of states) 0 = Low, 1 = High.
 
-        Returns
-        -------
-        None.
+        :param name: The port name (or a list of names) to set the state.
+        :type name: str, list(str)
 
-        Example
-        -------
-        Set port DIO0 bit to high
-        >>> ljt7.set_digital('DIO0', 1)
+        :param state: The digital state (or a list of states)
+            `0 = Low`, `1 = High`.
+        :type state: int, list(int)
 
-        Set ports DIO0, DIO1 and DIO6' bits to high, low and high
-        >>> ljt7.set_digital(['DIO0', 'DIO1', 'DIO6'], [1, 0, 1])
+
+        Set port ``'FIO0'`` bit to high:
+        
+            >>> ljt7.set_digital('FIO0', 1)
+
+        Set ports ``'FIO0'``, ``'FIO1'`` and ``'FIO6'`` bits to high,
+        low and high:
+
+            >>> ljt7.set_digital(['FIO0', 'FIO1', 'FIO6'], [1, 0, 1])
 
         """
         # Making sure inputs are lists
@@ -2473,23 +2387,21 @@ class LabJackT7:
         Read the digital state from an input port.
         It also sets the port direction to input.
 
-        Parameters
-        ----------
-        name : str, list
-            The port name (or list of port names) to get the state.
 
-        Returns
-        -------
-        state : int, list
-            The state of the digital port. 0 = Low, 1 = High.
+        :param name: The port name (or list of port names) to get the state.
+        :type name: str, list(str)
 
-        Example
-        -------
-        Get logic state on port DIO2
-        >>> ljt7.get_digital('DIO2')
+        :returns: The state of the digital port. `0 = Low`, `1 = High`.
+        :rtype: int, list(int)
 
-        Get logic states on ports DIO2, DIO3 and DIO7
-        >>> ljt7.get_digital(['DIO2', 'DIO3', 'DIO7'])
+
+        Get logic state on port ``'FIO2'``:
+
+            >>> ljt7.get_digital('FIO2')
+
+        Get logic states on ports ``'FIO2'``, ``'FIO3'`` and ``'FIO7'``:
+
+            >>> ljt7.get_digital(['FIO2', 'FIO3', 'FIO7'])
 
         """
         if type(names) != list:
@@ -2511,65 +2423,76 @@ class LabJackT7:
         """
         Set and start data streaming.
 
-        Parameters
-        ----------
-        names : str, list
-            The port NAMES can be AIN0 to AIN13 and DIO0 to DIO22. 
-        scanrate : int
-            The scan rate (Hz) of the data streaming. The default (and maximum)
-            value is 100000 Hz. The effective scan frequency of each channel is
-            the scan rate divided by the number of scanned channels. When
-            `clocksource` is equal to 'EXT', `scanrate` is interpreted as the
-            number of pulses per block of data.
-        readrate : float
-            The size in seconds of the data blocks data are retrieved from the
-            data buffer by get_stream. When `clocksource` is equal to 'EXT',
-            `readrate` is interpreted as the number of blocks of data retrieved
-            by get_stream. The default value is 0.5 seconds
-        clocksource : str
-            The source of the streaming clock. It indicates whether the LabJack
-            internal clock or an external clock (pulse train) will be used. In 
-            the case of an external clock, the digital signal must be connected
-            to CIO3 (DIO16). The default value is 'INT'.
-        exttrigger : str
-            The DIO port name containing an external trigger used to start the
-            streaming.
 
-        Returns
-        -------
-        None.
+        :param name: The T7 port name (or list of names) to be streamed.
+            Any analog and/or digital port can be used.
+        :type name: str, list(str)
 
-        Example
-        -------
-        Configure 100000 Hz streaming with 0.5 s data blocks from port AIN0.
-        >>> ljt7.set_stream('AIN0')
+        :param scanrate:  The scan rate (Hz) of the data streaming. 
+            The default (and maximum) value is ``100000`` Hz. The effective
+            scan frequency of each port is the scan rate divided by the
+            number of scanned ports. When `clocksource` is equal to
+            ``'EXT'``, `scanrate` is interpreted as the number of pulses per
+            block of data.
+        :type scanrate: int
 
-        Configure streaming for 1 s data blocks from analog and digital ports.
-        >>> ljt7.set_stream(['AIN0', 'AIN1', 'DIO6', 'DIO7'], readrate=1)
+        :param readrate: The rate in seconds at which blocks of data are
+            retrieved from the data buffer by `get_stream`. The default value
+            is ``0.5`` seconds. When `clocksource` is equal to ``'EXT'``,
+            `readrate` is interpreted as the number of blocks of data to be
+            retrieved each time.
+        :type readrate: float
 
-        Configure streaming for 0.5 s data blocks from analog ports
-        The scan rate is 50000 Samples/s (25000 S/s for each port)
-        >>> ljt7.set_stream(['AIN0','AIN1'], scanrate=50000)
+        :param clocksource: The source of the streaming clock.
+            It indicates whether the LabJack internal clock or an external
+            clock (pulse train) will be used. In the case of an external clock,
+            the digital signal must be connected to ``'CIO3'`` (``'DIO16'``).
+            The default value is ``'INT'``.
+        :type clocksource: str
+
+        :param exttrigger: The `DIO` port name containing an external trigger
+            used to start the streaming.
+        :type exttrigger: str
+
+
+        Configure ``100000`` Hz streaming with ``0.5`` s data blocks from port
+        ``'AIN0'``:
+
+            >>> ljt7.set_stream('AIN0')
+
+        Configure streaming for ``1`` s data blocks from analog and digital
+        ports.
+
+            >>> ljt7.set_stream(['AIN0', 'AIN1', 'DIO6', 'DIO7'], readrate=1)
+
+        Configure streaming for ``0.5`` s data blocks from analog ports.
+        The scan rate is ``50000`` Samples/s (25000 S/s for each port):
+
+            >>> ljt7.set_stream(['AIN0','AIN1'], scanrate=50000)
 
         Configure streaming for 1 block of 1024 Samples/port per data retrieve.
-        The external clock signal must be connected to CIO3 (DIO16)
-        >>> ljt7.set_stream(['AIN0','AIN1'],
-                            scanrate=1024, readrate=1, clocksource='EXT')
+        The external clock signal must be connected to ``'CIO3'``
+        (``'DIO16'``):
 
-        Configure streaming for 3 blocks of 600 Samples/port
-        Port DIO1 is connected to an external trigger that will
-        start the streaming
-        The external clock signal must be connected to CIO3 (DIO16)
-        >>> ljt7.set_stream(['AIN0','DIO0'],
-                            scanrate=600, readrate=3, clocksource='EXT',
-                            exttrigger='DIO1')
+            >>> ljt7.set_stream(['AIN0','AIN1'], scanrate=1024, readrate=1, clocksource='EXT')
 
-        Notes
-        -----
-        Data streaming starts immediatelly after set_stream is invoked,
-        unless `exttrigger` is used.
+        Configure streaming for 3 blocks of 600 Samples/port.
+        Port ``'DIO1'`` is connected to an external trigger that will start the
+        streaming. The external clock signal must be connected to ``'CIO3'``
+        (``'DIO16'``):
 
-        See also get_stream and stop_stream
+            >>> ljt7.set_stream(['AIN0','DIO0'],
+                                scanrate=600, readrate=3, clocksource='EXT',
+                                exttrigger='DIO1')
+
+
+        .. note::
+            `exttrigger` port must use the `DIO` naming convention, i.e.: ports
+            ``'DIO0'`` to ``'DIO16'``.
+
+        .. note::
+            Data streaming starts immediatelly after `set_stream` is invoked,
+            unless `exttrigger` is used.
 
         """
         # Making sure inputs are lists
@@ -2648,50 +2571,56 @@ class LabJackT7:
 
     def get_stream(self):
         """
-        Get data streaming data block.
+        Get streaming data block.
 
-        Parameters
-        ----------
-        None.
 
-        Returns
-        -------
-        dt : float, ndarray
-            The sampling period (s) between each data point.
-            When the streaming is configured with an external clock, DT
-            contains the delta times between two consecutive samples.
-            The first value of the array DT is NaN.
-        value : ndarray
-            The numpy m-by-n array containing the streamed data where
-            m is the number of samples per channel in the block and n
-            is the number of channels defined in set_stream()
-        numscans : int
-            The actual number of scans per channel in the data block.
-        commbacklog : float
-            The communication backlog in % (increasing values indicate
-            that the computer cannot keep up with the data download from
-            the U3 driver)
-        devbacklog : float
-            The U3 device backlog in % (increasing values indicate that
-            the U3 device cannot keep up with the data streaming - usually
-            not the case)
+        :returns: 5-tuple
 
-        Example
-        -------
-        Retrieve one data block
-        >>> dt, datablock, commbacklog, T7backlog = ljt7.get_stream()
+            * dt
+            
+                The sampling period (s) between each data point.
+                When the streaming is configured with an external clock, `dt`
+                contains the delta times between two consecutive samples.
 
-        Create the time array for the acquired block
-        >>> t = dt * np.linspace(0, datablock.shape[0]-1, datablock.shape[0])
+            * data
 
-        See also set_stream and stop_stream
+                The numpy `m-by-n` array containing the streamed data where
+                `m` is the number of samples per port in the block and `n`
+                is the number of ports defined in `set_stream`
+
+            * numscans
+            
+                The actual number of scans per port in the data block.
+
+            * commbacklog
+            
+                The communication backlog in % (increasing values indicate that
+                the computer cannot keep up with the data download from the T7
+                driver)
+
+            * devbacklog
+            
+                The T7 device backlog in % (increasing values indicate that the
+                device cannot keep up with the data streaming - usually not
+                the case)
+
+        :rtype: (float, ndarray, int, float, float)
+
+
+        Retrieve one data block:
+
+            >>> dt, datablock, commbacklog, T7backlog = ljt7.get_stream()
+
+        Create the time array for the acquired block (internal clock):
+
+            >>> t = dt * np.linspace(0, datablock.shape[0]-1, datablock.shape[0])
 
         """
         # Reading data block from LabJack
         data, commbacklog, devbacklog = ljm.eStreamRead(self._commhandle)
         # Creating array from data
         data = np.array(data)
-        # Separating interweaved channels into columns
+        # Separating interweaved ports into columns
         ncol = self._streamnumports
         nrow = len(data)//ncol
         valueaux = data[0:nrow*ncol].reshape((nrow, ncol))
@@ -2717,20 +2646,7 @@ class LabJackT7:
         """
         Stop data streaming.
 
-        Parameters
-        ----------
-        None.
-
-        Returns
-        -------
-        None.
-
-        Example
-        -------
-        Stopping data streaming
-        >>> ljt7.stop_stream()
-
-        See also set_stream, get_stream
+            >>> ljt7.stop_stream()
 
         """
         ljm.eStreamStop(self._commhandle)
@@ -2740,49 +2656,56 @@ class LabJackT7:
         """
         Configure PWM output.
 
-        Parameters
-        ----------
-        pwmnum : int
-            The number of PWM output signals. 1 or 2 PWMs can be used.
-            For one PWM, the output port is FIO0. For two PWMs, the output
-            ports are FIO0 and FIO4
-        dirport1 : str
-            The type of ports that control the PWM "direction" for electric
-            motor control. There are three options:
-            - None  - Default value (no direction ports are used)
-            - 'DAC' - Uses analog ports DAC0 and DAC1
-            - 'DIO' - Uses digital ports EIO0 and EIO1
-            When using digital ports, a 10 kOhm resistor has to be connected
-            from the LabJack VS port to each one of the DIO ports to ensure
-            true 'high' and 'low' states.
-        dirport2 : str
-            Same as `dirport1`. It is used when two PWM outputs are enabled.
-            The 'DAC' option can only be used for one set of direction ports,
-            unless the two motors are running synchronously. For the 'DIO'
-            option, digital ports EIO2 and EIO3 are used.
-        frequency : int
-            The PWM signal frequency in Hz. In the case of two PWMs, both will
-            have the same frequency.
 
-        Returns
-        -------
-        None.
+        :param pwmnum: The number of PWM output signals.
+            ``1`` or ``2`` PWMs can be used. For one PWM, the output port is
+            ``'FIO0'``. For two PWMs, the output ports are ``'FIO0'`` and 
+            ``'FIO4'``.
+        :type pwmnum: int
 
-        Example
-        -------
-        Set 1 PWM for motor control on FIO0 with direction ports on DAC0 and
-        DAC1. The PWM frequency is the default 500 Hz.
-        >>> ljt7.set_pwm(dirport1='DAC')
+        :param dirport1: The type of ports that control the PWM `direction`
+            for electric motor control. There are three options:
 
-        Set 2 PWMs with a frequency of 250 Hz.
-        >>> ljt7.set_pwm(pwmnum=2, frequency=250)
+            * ``None``  - Default value (no direction ports are used)
+            * ``'DAC'`` - Uses analog ports ``'DAC0'`` and ``'DAC1'``
+            * ``'DIO'`` - Uses digital ports ``'EIO0'`` and ``'EIO1'``
 
-        Set 2 PWMs for motor control on ports FIO0 and FIO4, using the digital
-        ports EIO0 and EIO1 for motor 1 direction, and EIO2 and EIO3 for motor
-        2 direction. The PWM frequency is 750 Hz
-        >>> ljt7.set_pwm(pwmnum=2, dirport1='DIO', dirport2='DIO', frequency=750)
+        :type dirport1: None, str
 
-        See also set_dutycycle
+        :param dirport2: Same as `dirport1`.
+            It's used when two PWM outputs are enabled. The ``'DAC'`` option
+            can only be used for one set of direction ports, unless the two
+            motors are running synchronously. For the ``'DIO'`` option,
+            digital ports ``'EIO2'`` and ``'EIO3'`` are used.
+        :type dirport2: None, str
+
+        :param frequency: The PWM signal frequency in Hz.
+            In the case of two PWMs, both will have the same frequency
+        :type frequency: int
+
+
+        Set 1 PWM for motor control on ``'FIO0'`` with direction ports on
+        ``'DAC0'`` and ``'DAC1'``. The PWM frequency is the default ``250`` Hz:
+
+            >>> ljt7.set_pwm(dirport1='DAC')
+
+        Set 2 PWMs on ports ``'FIO0'`` and ``'FIO4'`` with a frequency of
+        ``500`` Hz:
+        
+            >>> ljt7.set_pwm(pwmnum=2, frequency=500)
+
+        Set 2 PWMs for motor control on ports ``'FIO0'`` and ``'FIO4'``, using
+        the digital ports ``'EIO0'`` and ``'EIO1'`` for motor 1 direction, and
+        ``'EIO2'`` and ``'EIO3'`` for motor 2 direction. The PWM frequency is
+        ``750`` Hz:
+        
+            >>> ljt7.set_pwm(pwmnum=2, dirport1='DIO', dirport2='DIO', frequency=750)
+
+
+        .. note::
+            When using digital ports, a 10 kOhm resistor has to be connected from
+            the LabJack `VS` port to each one of the `DIO` ports to ensure true
+            `high` and `low` states.
 
         """
         # Checking number of PWM outputs and direction ports
@@ -2838,44 +2761,44 @@ class LabJackT7:
         """
         Set PWM duty cycle value.
 
-        Parameters
-        ----------
-        value1 : float
-            The PWM 1 duty cycle percent value between -100 and 100.
-        value2 : float
-            The PWM 2 duty cycle percent value between -100 and 100.
-        brake1 : bool
-            The motor 1 brake option used when dutycycle is zero.
-            Brake is applied when True. Motor is floating when False.
-        brake2 : bool
-            The motor 2 brake option used when dutycycle is zero.
-            Brake is applied when True. Motor is floating when False.
 
-        Returns
-        -------
-        None.
+        :param value1: The PWM 1 duty cycle percent value between ``-100``
+            and ``100``.
+        :type value1: float
 
-        Example
-        -------
-        Set duty cycle to 50% on PWM 1
-        >>> ljt7.set_dutycycle(value1=50)
+        :param value2: The PWM 2 duty cycle percent value between ``-100``
+            and ``100``.
+        :type value2: float
 
-        Set duty cycle to 25% (reverse rotation) on PWM 2.
-        >>> ljt7.set_dutycycle(value2=-25)
+        :param brake1: The motor 1 brake option used when dutycycle is zero.
+            Brake is applied when ``True``. Motor is floating when ``False``.
+        :type brake1: bool
 
-        Set duty cycle to 20% and 40% on PWMs 1 and 2.
-        >>> ljt7.set_dutycycle(value1=20, value2=40)
+        :param brake2: The motor 2 brake option used when dutycycle is zero.
+            Brake is applied when ``True``. Motor is floating when ``False``.
+        :type brake2: bool
 
-        Stop motor 2 and apply brake.
-        >>> ljt7.set_dutycycle(value2=0, brake2=True)
 
-        Notes
-        -----
-        1.  Avoid suddenly switching the direction of the motor to avoid
-            damaging the motor and any gear train.
-        2.  You can use the brake option True to hold the motor in position.
+        Set duty cycle to ``50`` % on PWM 1:
 
-        See also set_pwm
+            >>> ljt7.set_dutycycle(value1=50)
+
+        Set duty cycle to ``25`` % (reverse rotation) on PWM 2:
+
+            >>> ljt7.set_dutycycle(value2=-25)
+
+        Set duty cycle to ``20`` % and ``40`` % on PWMs 1 and 2:
+  
+            >>> ljt7.set_dutycycle(value1=20, value2=40)
+
+        Stop motor 2 and apply brake:
+
+            >>> ljt7.set_dutycycle(value2=0, brake2=True)
+
+
+        .. note::
+            1. Avoid suddenly switching the direction of rotation to avoid damaging the motor.
+            2. You can use the brake option True to hold the motor in position.
         
         """
         values = [value1, value2]
@@ -2928,42 +2851,42 @@ class LabJackT7:
     # QUADRATURE ENCODER METHODS
     def set_quadrature(self, quadnum=1, zphase1=False, zphase2=False):
         """
-        Configure encoder quadrature input.
+        Configure quadrature encoder input.
 
-        Parameters
-        ----------
-        quadnum : int
-            The number of quadrature input signals. 1 or 2 encoders can be
-            used. For one encoder, the input ports are FIO2 and FIO3. For two
-            encoders, the input ports for the second one are FIO6 and FIO7.
-        zphase1 : bool
-            The logic value indicating if a Z-phase reference pulse is used
-            for the first encoder. Port FIO1 is used.
-        zphase2 : bool
-            The logic value indicating if a Z-phase reference pulse is used
-            for the second encoder. Port FIO1 is used for the first encoder
-            and port FIO5 is used for the second encoder. `zphase2` is ignored
-            if `quadnum=1`.
 
-        Returns
-        -------
-        None.
+        :param quadnum: The number of quadrature input signals.
+            ``1`` or ``2`` encoders can be used. For one encoder, the input
+            ports are ``'FIO2'`` and ``'FIO3'``. For two encoders, the input
+            ports for the second one are ``'FIO6'`` and ``'FIO7'``. 
+        :type quadnum: int
 
-        Example
-        -------
-        Set ports FIO2 and FIO3 for encoder with phase A and B signals only.
-        >>> ljt7.set_quadrature()
+        :param zphase1: The logic value indicating if a `Z` phase reference
+            pulse is used for the first encoder. Port ``'FIO1'`` is used. 
+        :type zphase1: bool
 
-        Set ports FIO2 and FIO3 for encoder phase A and B signals and port
-        FIO1 for the reference Z phase.
-        >>> ljt7.set_quadrature(zphase1=True)
+        :param zphase2: The logic value indicating if a `Z` phase reference
+            pulse is used for the second encoder. Port ``'FIO1'`` is used for
+            the first encoder and port ``'FIO5'`` is used for the second 
+            encoder. `zphase2` is ignored if `quadnum` = ``1``.
+        :type zphase1: bool
 
-        Set two encoders with Z phase. A and B phases are  on ports FIO2 and
-        FIO3 for encoder 1, and FIO6 and FIO7 for encoder 2. The Z phase ports
-        are respectively FIO1 and FIO5.
-        >>> ljt7.set_quadrature(quadnum=2, zphase1=True, zphase2=True)
 
-        See also get_counter, reset_counter
+        Set ports ``'FIO2'`` and ``'FIO3'`` for encoder with phase `A` and `B`
+        signals only:
+        
+            >>> ljt7.set_quadrature()
+
+        Set ports ``'FIO2'`` and ``'FIO3'`` for encoder phase `A` and `B`
+        signals, and port ``'FIO1'`` for the reference `Z` phase:
+        
+            >>> ljt7.set_quadrature(zphase1=True)
+
+        Set 2 encoders with `Z` phase. `A` and `B` phases are on ports
+        ``'FIO2'`` and ``'FIO3'`` for encoder 1, and ``'FIO6'`` and ``'FIO7'``
+        for encoder 2. The `Z` phase ports are respectively ``'FIO1'`` and
+        ``'FIO5'``:
+
+            >>> ljt7.set_quadrature(quadnum=2, zphase1=True, zphase2=True)
 
         """
         # Selecting port numbers based on input options
@@ -2980,7 +2903,7 @@ class LabJackT7:
             if zphase2:
                 portnumZ[1] = 5
         else:
-            raise Exception('Only 1 or 2 quadrature inputd can be assigned.')
+            raise Exception('Only 1 or 2 quadrature inputs can be assigned.')
         # Assigning quadrature properties
         self._zphase = [zphase1, zphase2]
         self._quadnum = quadnum
@@ -3019,24 +2942,17 @@ class LabJackT7:
         """
         Get current quadrature counter value.
 
-        Parameters
-        ----------
-        None
 
-        Returns
-        -------
-        value : int, list
-            The counter value or a list with 2 values for 2 encoders.
+        :returns: The counter value or a list with 2 values for 2 encoders.
+        :rtype: int, list(int)
 
-        Example
-        -------
-        Gets current counter value or list of values
+        
         >>> ljt7.get_counter()
 
-        Notes
-        -----
-        1.  Because the qudrature counter counts rising and falling edges
-            of phases A and B, a 1024 pulse/rev encoder will generate 4096
+
+        .. note::
+            Because the qudrature counter counts rising and falling edges
+            of phases `A` and `B`, a 1024 pulse/rev encoder will generate 4096
             counts for a full shaft turn.
 
         """
@@ -3051,30 +2967,27 @@ class LabJackT7:
         """
         Reset quadrature counter value.
 
-        Parameters
-        ----------
-        counter1 : bool
-            The flag indicating whether to reset counter 1 or not.
-            The default value is True and it resets the counter.
-        counter2 : bool
-            The flag indicating whether to reset counter 2 or not.
-            The default value is True and it resets the counter.
 
-        Returns
-        -------
-        None
+        :param counter1: The flag indicating whether to reset counter 1 or not.
+            The default value is ``True`` and it resets the counter.
+        :type counter1: bool
 
-        Example
-        -------
+        :param counter2: The flag indicating whether to reset counter 2 or not.
+            The default value is ``True`` and it resets the counter.
+        :type counter2: bool
+
+
         Resets current counter value of all encoders.
-        >>> ljt7.reset_counter()
+
+            >>> ljt7.reset_counter()
 
         Resets current counter value only for second encoder.
-        >>> ljt7.reset_counter(counter1=False)
+        
+            >>> ljt7.reset_counter(counter1=False)
 
-        Notes
-        -----
-        1.  The count is only reset when a Z phase isn't being used.
+
+        .. note::
+            The count is only reset when a `Z` phase isn't being used.
 
         """
         if not self._zphase[0] and counter1:
@@ -3086,26 +2999,24 @@ class LabJackT7:
     # THERMOCOUPLE METHODS
     def get_labjacktemp(self, unit='C'):
         """
-        Get LabJack's temperature from internal sensor.
+        Get ambient temperature from LabJack's internal sensor.
 
-        Parameters
-        ----------
-        unit : str
-            The temperature measurement unit.
-            Valid values are `C` or `F'. Default unit is `C`.
 
-        Returns
-        -------
-        value : float
-            The internal sensor temperature reading
+        :param unit: The temperature measurement unit.
+            Valid values are ``'C'`` or ``'F'``. Default unit is ``'C'``.
+        :type unit: str
 
-        Example
-        -------
-        Get temperature reading in deg. C
-        >>> ljt7.get_labjacktemp()
+        :returns: The internal sensor temperature reading.
+        :rtype: float
 
-        Get temperature reading in deg. F
-        >>> ljt7.get_labjacktemp(unit='F')
+
+        Get temperature reading in `Celsius`:
+
+            >>> ljt7.get_labjacktemp()
+
+        Get temperature reading in `Fahrenheit`:
+        
+            >>> ljt7.get_labjacktemp(unit='F')
 
         """
         v = ljm.eReadName(self._commhandle, 'AIN14')
@@ -3125,32 +3036,31 @@ class LabJackT7:
         """
         Set configuration for thermocouple input.
 
-        Parameters
-        ----------
-        names : str, list
-            The analog port(s) that will be used for thermocouple input.
-            Ports AIN0 to AIN3 are recommended for higher measurement accuracy.
-            The negative thermocouple wire should be connected to GND.
-        type : str, list
-            The thermocouple type. It can be a single string or a list with
-            same length as NAMES. Valid types are: 
-            'B', 'E', 'J', 'K', 'N', 'R', 'S', 'T', and 'C'
-        unit : str
-            The temperature measurement unit.
-            Valid values are `C` or `F'. Default unit is `C`.
+        :param names: The analog port(s) that will be used for thermocouple
+            input. Ports ``'AIN0'`` to ``'AIN3'`` are recommended for higher
+            measurement accuracy. The negative thermocouple wire should be
+            connected to the LabJack `GND`.
+        :type names: str, list(str)
 
-        Returns
-        -------
-        None.
+        :param types: The thermocouple type.
+            It can be a single string or a list with same length as `names`.
+            Valid types are: ``'B'``, ``'E'``, ``'J'``, ``'K'``, ``'N'``,
+            ``'R'``, ``'S'``, ``'T'``, and ``'C'``.
+        :type types: str, list(str)
 
-        Example
-        -------
-        Set port AIN0 for thermocouple type K.
-        >>> ljt7.set_TC('AIN0', 'K')
+        :param unit:  The temperature measurement unit.
+            Valid values are ``'C'`` or ``'F'``. Default unit is ``'C'``.
+        :type unit: str
 
-        Set port AIN0, AIN2, and AIN3 for thermocouples type K and J with
-        measurement in deg F.
-        >>> ljt7.set_TC(['AIN0', 'AIN2', 'AIN3'], ['K', 'J', 'J'], unit='F')
+
+        Set port ``'AIN0'`` for thermocouple type ``'K'``:
+        
+            >>> ljt7.set_TC('AIN0', 'K')
+
+        Set ports ``'AIN0'``, ``'AIN2'``, and ``'AIN3'`` for thermocouples
+        type ``'K'`` and ``'J'`` with measurement in Fahrenheit:
+
+            >>> ljt7.set_TC(['AIN0', 'AIN2', 'AIN3'], ['K', 'J', 'J'], unit='F')
 
         """
         self._TCoptions = ['B', 'E', 'J', 'K', 'N', 'R', 'S', 'T', 'C']
@@ -3183,20 +3093,15 @@ class LabJackT7:
         """
         Get thermocouple temperature reading.
 
-        Parameters
-        ----------
-        None.
 
-        Returns
-        -------
-        value : float, list
-            The temperature readings for the thermocouples defined
-            using set_TC.
+        :returns: The temperature readings for the thermocouples defined
+            using `set_TC`.
+        :rtype: float, list(float)
 
-        Example
-        -------
-        Gets temperature readings from thermocouples.
-        >>> ljt7.get_TCtemp()
+
+        Get temperature from thermocouples:
+
+            >>> ljt7.get_TCtemp()
 
         """
         # Getting LabJack cold joint temperature
@@ -3227,37 +3132,42 @@ class LabJackT7:
         """
         Set reference point for analog input voltage.
 
-        Parameters
-        ----------
-        names : str, list
-            The analog port(s) that will that will have the voltage reference
-            point modified.
-        mode : str
-            The reference mode for the analog channels. It and can be either
-            `Single-Ended` or `Differential`. Default is `Single-Ended'.
 
-        Returns
-        -------
-        None.
+        :param names: The analog port(s) that will that will have the voltage
+            reference point modified.
+        :type names: str, list(str)
 
-        Example
-        -------
-        Set port AIN0 for differential reading with port AIN1.
-        >>> ljt7.set_reference('AIN0', 'Differential')
+        :param mode: The reference mode for the analog ports.
+            It and can be either ``'single-ended'`` or ``'differential'``.
+            Default is ``'single-ended'``. Use ``'ALL'`` to set all analog
+            input ports to the same mode.
+        :type mode: str
 
-        Set ports AIN0, AIN2, and AIN6 for differential reading respecitvely
-        with ports AIN1, AIN3, and AIN7.
-        >>> ljt7.set_reference(['AIN0', 'AIN2', 'AIN6'], 'Differential')
 
-        Set all ports for single-ended reading
-        >>> ljt7.set_reference('ALL', 'Single-Ended')
+        Set port ``'AIN0'`` for differential reading with port ``'AIN1'``:
+
+            >>> ljt7.set_reference('AIN0', differential')
+
+        Set ports ``'AIN0'``, ``'AIN2'``, and ``'AIN6'`` for differential
+        reading respecitvely with ports ``'AIN1'``, ``'AIN3'``, and ``'AIN7'``:
+
+            >>> ljt7.set_reference(['AIN0', 'AIN2', 'AIN6'], 'differential')
+
+        Set all ports for single-ended reading:
+        
+            >>> ljt7.set_reference('ALL', 'single-ended')
+
+
+        .. note::
+            Differential reading uses two consecutive even-odd ports.
+            Valid ports for differential reading are AIN0/2/4/6/8/10/12.
 
         """
         # Checking for valid inputs
         if type(names) != list: names = [names]
         if mode.lower() not in ['single-ended', 'differential']:
             raise Exception(
-                "Valid reference types are 'Single-Ended' or 'Differential'.")
+                "Valid reference types are 'single-ended' or 'differential'.")
         # Assigning range values
         if (names[0].lower() == 'all') and (len(names) == 1):
             numref = 199
@@ -3281,31 +3191,30 @@ class LabJackT7:
         """
         Set analog input voltage range.
 
-        Parameters
-        ----------
-        names : str, list
-            The analog port(s) that will have their ranges modified.
-            Use `all` to set all analog input ports to the same range.
-        value : float, list
-            The voltage range value to be used.
-            Valid ranges are +/- 10, 1, 0.1, 0.01 V.
-            If a single value is used, it will be applied to all
-            channels in NAMES.
 
-        Returns
-        -------
-        None.
+        :param names: The analog port(s) that will have their ranges modified.
+            Use ``'ALL'`` to set all analog input ports to the same range.
+        :type names: str, list(str)
 
-        Example
-        -------
-        SSet port AIN0 with a range of +/- 1 V.
-        >>> ljt7.set_range('AIN0', 1)
+        :param ranges: The voltage range value to be used.
+            Valid ranges are +/- ``10``, ``1``, ``0.1``, ``0.01`` V. If a
+            single value is used, it will be applied to all ports in
+            `names`.
+        :type ranges: float, list(float)
 
-        Set port AIN0 and AIN2 with a range of +/- 0.1 and 0.01 V
-        >>> ljt7.set_range(['AIN0', 'AIN2'], [0.1, 0.01])
 
-        Set all ports with a (default) range of +/- 10 V
-        >>> ljt7.set_range('ALL', 10)
+        Set port ``'AIN0'`` with a range of +/- ``1`` V:
+       
+            >>> ljt7.set_range('AIN0', 1)
+
+        Set port ``'AIN0'`` and ``'AIN2'`` with a range of +/- ``0.1`` and
+        ``0.01`` V:
+
+            >>> ljt7.set_range(['AIN0', 'AIN2'], [0.1, 0.01])
+
+        Set all ports with a (default) range of +/- ``10`` V:
+        
+            >>> ljt7.set_range('ALL', 10)
 
         """
         # Checking for valid inputs
