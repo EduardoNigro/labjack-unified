@@ -31,8 +31,13 @@ reset_counter | Resets edge counter
 
 Installing **labjack-unified** will install its dependencies: _LabJackPython_ and _labjack-ljm_. _Plotly_ will also be installed so graphs can be displayed when running the examples.
 
+## Documentation
+
+Comprehensive documentation for **labjack-unified** is available [here](https://eduardonigro.github.io/labjack-unified/).
+
 ## Examples
-Nine examples are available, with four of them requiring only a pair of wires to be executed successfully. Below is the code for **lj_io_analog.py**:
+Nine examples are available in the documentation, with four of them requiring only
+a pair of wires to be executed successfully. Below is the code for **lj_io_analog.py**:
 
 ```python
 """ lj_io_analog.py 
