@@ -18,7 +18,7 @@ Example                                                           Hardware Requi
 :doc:`Incremental Encoder <Incremental_Encoder>`                  Quadrature encoder wit A-B phases
 :doc:`Absolute Encoder <Absolute_Encoder>`                        Quadrature encoder wit A-B-Z phases
 :doc:`Electric Motor <Electric_Motor>`                            12V power supply, 12V DC motor, H-Bridge
-:doc:`Electric Motor with Encoder <Electric_Motor_with_Encoder>`  12V power supply, 12V DC motor, H-Bridge
+:doc:`Electric Motor with Encoder <Electric_Motor_with_Encoder>`  12V power supply, 12V DC motor with encoder, H-Bridge
 :doc:`T7 Streaming (internal clock) <T7_Streaming_Internal>`      Two wires
 :doc:`T7 Streaming (external clock) <T7_Streaming_External>`      12V power supply, 12V DC motor, H-Bridge, A-B-Z encoder
 ================================================================  =======================================================

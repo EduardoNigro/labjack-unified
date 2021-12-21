@@ -2,7 +2,7 @@ Absolute Encoder
 ================
 
 In this example code, the reference mark (Z phase pulse) is determined by slowly turning
-the encoder shaft. Then, the absolute angular position is displayed during 30 seconds as
+the encoder shaft. Then, the absolute angular position is displayed, during 30 seconds as
 the shaft is turned.
 
 

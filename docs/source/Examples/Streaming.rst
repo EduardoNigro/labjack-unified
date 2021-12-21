@@ -1,14 +1,14 @@
 Streaming
 =========
 
-In this example :ref:`code <code>`, data is acquired at 50,000 Samples/s, for two
+In this example :ref:`code <codestreaming>`, data is acquired at 50,000 Samples/s, for two
 consecutive 0.5 s blocks. On a **LabJack U3**, two 183 Hz PWM signals are generated
 on ports **FIO4** and **FIO5**, and streamed into **AIN0** and **AIN1**, repectively.
 
 
 .. image:: ../../images/lj_streaming_fig_1.png
 
-.. _code:
+.. _codestreaming:
 
 .. code-block:: python
 

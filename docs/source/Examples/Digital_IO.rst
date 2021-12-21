@@ -1,7 +1,7 @@
 Digital I/O
 ===========
 
-This example :ref:`code <code>` shows how to use digital inputs and outputs in a data
+This example :ref:`code <codedigital>` shows how to use digital inputs and outputs in a data
 acquisition loop. If you're using a **LabJack U3**, random digital outputs (0 or 1)
 are generated at a constant time interval of 0.2 s on ports **FIO4** and **FIO5**.
 Ports **FIO6** and **FIO7** are used to sample the signals at a constant time interval
@@ -11,7 +11,7 @@ of 10 ms. The variability on the sampling period is less than 0.02 ms.
 .. image:: ../../images/lj_io_digital_fig_1.png
 .. image:: ../../images/lj_io_digital_fig_2.png
 
-.. _code:
+.. _codedigital:
 
 .. code-block:: python
 

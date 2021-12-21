@@ -27,7 +27,7 @@ set_stream       Sets LabJack configuration for data streaming
 get_stream       Gets streaming data
 stop_stream      Stops data streaming
 set_PWM          Sets LabJack configuration for PWM output
-set_dutycycle    Sets duty cycle of PWM output (-100 to 100)
+set_dutycycle    Sets duty cycle of PWM output
 set_quadrature   Sets LabJack configuration for encoder A-B-Z input
 get_counter      Gets edge count from encoder A-B signals
 reset_counter    Resets edge counter
@@ -39,8 +39,11 @@ Installation
 
 >>> py -m pip install labjack-unified
 
-Installing **labjack-unified** will install its dependencies: *LabJackPython* and *labjack-ljm*.
-*Plotly* will also be installed so graphs can be displayed when running the examples.
+Installing **labjack-unified** will install its dependencies:
+`LabJackPython <https://pypi.org/project/LabJackPython/>`__ and 
+`labjack-ljm <https://pypi.org/project/labjack-ljm/>`__.
+`Plotly <https://pypi.org/project/plotly/>`__ will also be installed so graphs can be
+displayed when running the examples.
 
 
 Examples

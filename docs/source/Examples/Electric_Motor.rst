@@ -1,7 +1,7 @@
 Electric Motor
 ==============
 
-In this example code, the motor speed is ramped up for 5 seconds and down for 5 seconds,
+In this example code, the motor speed is ramps up for 5 seconds and down for 5 seconds,
 as the PWM output is ramped linearly from 0 to 100 % and then back to 0. 
 
 

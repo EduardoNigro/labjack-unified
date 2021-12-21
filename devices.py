@@ -154,7 +154,7 @@ class LabJackU3:
 
     def display_info(self):
         """
-        Displays a summary with the U3 device information.
+        Display a summary with the U3 device information.
         
         """
         print('____________________________________________________________')
@@ -177,18 +177,18 @@ class LabJackU3:
         :param config:  The configuration option. 
             If `name` is ``'ALL'`` a string of mask bits for all 16 ports
             is used. For single port, `config` can be either a string
-            ``'ANALOG'`` or ``'DIGITAL'``. Alternativelly, 1 or 0 can be used.
+            ``'analog'`` or ``'digital'``. Alternativelly, 1 or 0 can be used.
         :type config: str, int
 
 
         Configure flexible ports ``'FIO4'`` and ``'FIO5'`` as analog:
 
-            >>> lju3.set_config('FIO4', 'Analog')
+            >>> lju3.set_config('FIO4', 'analog')
             >>> lju3.set_config('FIO5', 1)
 
         Configure flexible ports ``'EIO0'`` and ``'EIO1'`` as digital:
             
-            >>> lju3.set_config('EIO0', 'Digital')
+            >>> lju3.set_config('EIO0', 'digital')
             >>> lju3.set_config('EIO1', 0)
 
         Configure flexible ports ``'EI01'`` and ``'EI03'`` as analog and
@@ -461,7 +461,7 @@ class LabJackU3:
         Set and start data streaming.
 
 
-        :param name: The U3 port name (or list of names) to be streamed.
+        :param name: The port name (or list of names) to be streamed.
         :type name: str, list(str)
 
         :param scanrate:  The scan rate (Hz) of the data streaming. 
@@ -891,7 +891,7 @@ class LabJackU3:
         :rtype: int
 
         
-            >>> lju3.get_counter()
+        >>> lju3.get_counter()
 
 
         .. note::
@@ -1070,7 +1070,7 @@ class LabJackU6:
 
     You can also connect to a specific device using its serial number:
 
-        >>> lju6 = LabJackU6(370012345)
+        >>> lju6 = LabJackU6(360012345)
 
     """
     # CONSTRUCTOR METHODS
@@ -1112,7 +1112,7 @@ class LabJackU6:
 
     def display_info(self):
         """
-        Displays a summary with the U6 device information.
+        Display a summary with the U6 device information.
         
         """
         print('____________________________________________________________')
@@ -1298,7 +1298,7 @@ class LabJackU6:
         Set and start data streaming.
 
 
-        :param name: The U6 port name (or list of names) to be streamed.
+        :param name: The port name (or list of names) to be streamed.
         :type name: str, list(str)
 
         :param scanrate:  The scan rate (Hz) of the data streaming. 
@@ -1677,7 +1677,7 @@ class LabJackU6:
     # QUADRATURE ENCODER METHODS
     def set_quadrature(self, quadnum=1, zphase1=False, zphase2=False):
         """
-        Configure quadrature encoder input on ports ``'FIO4'`` and ``'FIO5'``.
+        Configure quadrature encoder input.
 
 
         :param quadnum: The number of quadrature input signals.
@@ -1817,7 +1817,7 @@ class LabJackU6:
 
         .. note::
             If the method `set_pwm_quad` was used to configure both a PWM and
-            a quadrature encoder, use only `counter1` to reset the counter.
+            a quadrature encoder, use `counter2` = ``'False'`` to reset the counter.
 
         """
         if not self._zphase[0] and counter1:
@@ -2198,7 +2198,7 @@ class LabJackT7:
         * `get_TCtemp` - Gets thermocouple temperature reading
 
 
-    Connect to the first found U6:
+    Connect to the first found T7:
 
         >>> from labjack_unified.devices import LabJackT7
         >>> ljt7 = LabJackT7()
@@ -2247,7 +2247,7 @@ class LabJackT7:
 
     def display_info(self):
         """
-        Displays a summary with the T7 device information.
+        Display a summary with the T7 device information.
         
         """
         print('____________________________________________________________')
@@ -2424,7 +2424,7 @@ class LabJackT7:
         Set and start data streaming.
 
 
-        :param name: The T7 port name (or list of names) to be streamed.
+        :param name: The port name (or list of names) to be streamed.
             Any analog and/or digital port can be used.
         :type name: str, list(str)
 
@@ -2707,6 +2707,9 @@ class LabJackT7:
             the LabJack `VS` port to each one of the `DIO` ports to ensure true
             `high` and `low` states.
 
+        .. note::
+            Two PWMs and two encoders can be setup at the same time on the T7 device.
+
         """
         # Checking number of PWM outputs and direction ports
         dirport = [dirport1, dirport2]
@@ -2887,6 +2890,10 @@ class LabJackT7:
         ``'FIO5'``:
 
             >>> ljt7.set_quadrature(quadnum=2, zphase1=True, zphase2=True)
+
+
+        .. note::
+            Two PWMs and two encoders can be setup at the same time on the T7 device.
 
         """
         # Selecting port numbers based on input options
@@ -3128,7 +3135,7 @@ class LabJackT7:
         return temp
 
     # OTHER METHODS
-    def set_reference(self, names, mode='Single-Ended'):
+    def set_reference(self, names, mode='single-ended'):
         """
         Set reference point for analog input voltage.
 

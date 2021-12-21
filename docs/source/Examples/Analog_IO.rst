@@ -1,7 +1,7 @@
 Analog I/O
 ==========
 
-This example :ref:`code <code>` shows how to use analog inputs and outputs in a data
+This example :ref:`code <codeanalog>` shows how to use analog inputs and outputs in a data
 acquisition loop. Random voltage outputs (between 0 and 5 V) are generated at a constant
 time interval of 0.5 s on ports **DAC0** and **DAC1**. Ports **AIN0** and **AIN1**
 are used to sample the voltages as fast as possible. The data acquisition latency
@@ -12,7 +12,7 @@ execution of output events can be achieved by the use of a timer logic in the lo
 .. image:: ../../images/lj_io_analog_fig_1.png
 .. image:: ../../images/lj_io_analog_fig_2.png
 
-.. _code:
+.. _codeanalog:
 
 .. code-block:: python
 
