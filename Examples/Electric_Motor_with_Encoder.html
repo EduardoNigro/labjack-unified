@@ -84,6 +84,11 @@
 <p>In this example code, the motor speed is ramps up for 5 seconds and down for 5 seconds,
 as the PWM output is ramped linearly from 0 to 100 % and then back to 0. The encoder is
 used to measure the shaft angular position, from which the motor speed can be calulated.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It’s not possible to simultaneously setup a motor with direction control and an
+encoder on a <strong>LabJack U3</strong>.</p>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; lj_motor_encoder.py</span>
 
 <span class="sd">Uses PWM to set the speed of DC electric motor and an encoder do measure it.</span>

@@ -84,10 +84,11 @@
 <p>For extended or indefinite streaming time, using a PI closed-loop control on the
 <strong>LabJack</strong> data backlog will prevent an eventual overflow (or starvation) of the
 streaming data buffer. This seems to be more critical on the <strong>T7</strong> device. This
-example <a class="reference internal" href="#codestreamingt7"><span class="std std-ref">code</span></a> also streams two 183 Hz PWM signals into ports <strong>AIN0</strong>
-and <strong>AIN1</strong>, but for a total of 60 blocks of 0.5 s each. The first figure shows the
-last 2 blocks of data, while the second figure shows the backlog as a function of time
-for the 30 s duration of the streaming. The target backlog value is 10%.</p>
+example <a class="reference internal" href="#codestreamingt7"><span class="std std-ref">code</span></a> also streams two 183 Hz PWM signals from ports
+<strong>FIO0</strong> and <strong>FIO4</strong> into ports <strong>AIN0</strong> and <strong>AIN1</strong>, but for a total of 60 blocks
+of 0.5 s each. The first figure shows the last 2 blocks of data, while the second
+figure shows the backlog as a function of time for the 30 s duration of the streaming.
+The target backlog value is 10%.</p>
 <img alt="../_images/ljt7_streaming_internal_fig_1.png" src="../_images/ljt7_streaming_internal_fig_1.png" />
 <img alt="../_images/ljt7_streaming_internal_fig_2.png" src="../_images/ljt7_streaming_internal_fig_2.png" />
 <div class="highlight-python notranslate" id="codestreamingt7"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; t7_streaming_internal.py</span>
