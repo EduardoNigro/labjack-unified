@@ -8,8 +8,8 @@ Ports **FIO6** and **FIO7** are used to sample the signals at a constant time in
 of 10 ms. The variability on the sampling period is less than 0.02 ms.
 
 
-.. image:: ../../images/lj_io_digital_fig_1.png
-.. image:: ../../images/lj_io_digital_fig_2.png
+.. image:: images/lj_io_digital_fig_1.png
+.. image:: images/lj_io_digital_fig_2.png
 
 .. _codedigital:
 

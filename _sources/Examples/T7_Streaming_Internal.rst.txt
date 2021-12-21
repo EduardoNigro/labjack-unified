@@ -10,8 +10,8 @@ last 2 blocks of data, while the second figure shows the backlog as a function o
 for the 30 s duration of the streaming. The target backlog value is 10%.
 
 
-.. image:: ../../images/ljt7_streaming_internal_fig_1.png
-.. image:: ../../images/ljt7_streaming_internal_fig_2.png
+.. image:: images/ljt7_streaming_internal_fig_1.png
+.. image:: images/ljt7_streaming_internal_fig_2.png
 
 .. _codestreamingT7:
 
