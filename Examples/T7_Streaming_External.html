@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>T7 Streaming (external clock) &mdash; Documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /><link rel="shortcut icon" href="../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="T7 Streaming (internal clock)" href="T7_Streaming_Internal.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> labjack-unified<img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../LabJackU3.html">LabJackU3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LabJackU6.html">LabJackU6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LabJackT7.html">LabJackT7</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Analog_IO.html">Analog I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Digital_IO.html">Digital I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Streaming.html">Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Incremental_Encoder.html">Incremental Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Absolute_Encoder.html">Absolute Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Electric_Motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Electric_Motor_with_Encoder.html">Electric Motor with Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="T7_Streaming_Internal.html">T7 Streaming (internal clock)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">T7 Streaming (external clock)</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">labjack-unified</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Examples</a> &raquo;</li>
+      <li>T7 Streaming (external clock)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Examples/T7_Streaming_External.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="t7-streaming-external-clock">
+<h1>T7 Streaming (external clock)<a class="headerlink" href="#t7-streaming-external-clock" title="Permalink to this headline"></a></h1>
+<p>This example code shows the usage of an external clock for data streaming.
+External clocks are particularly useful for rotary machines or internal combustion
+engines, where most phenomena are a function of the angular position of the shaft.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; t7_streaming_external.py</span>
+
+<span class="sd">Collects cycle data using an external clock.</span>
+
+<span class="sd">The external clock is generated using the output of a simple encoder, or</span>
+<span class="sd">one of the phases of a quadrature encoder, connected to digital port CIO3.</span>
+<span class="sd">The train of pulses allows for data to be collected as a function of angular</span>
+<span class="sd">position, independent of angular speed. This is typically used for rotary</span>
+<span class="sd">machines.</span>
+
+<span class="sd">A closed-loop PI controller aiming for a buffer backlog defined by the user</span>
+<span class="sd">is used to account for oscilations in angular velocity. This is accomplished</span>
+<span class="sd">by adjusting the duration of the wait between blocks of data in real time.</span>
+<span class="sd">Once the streaming starts, data must be pulled from the LabJack buffer at the</span>
+<span class="sd">appropriate rate to avoid an overflow. The PI loop is especially useful for</span>
+<span class="sd">extended periods of data acquisition.</span>
+
+<span class="sd">The `readrate` value must be selected so that the PI controller can have a</span>
+<span class="sd">good reponse. Values between 0.2 and 1.0 seconds seem appropriate.</span>
+<span class="sd">For example, for an expected angular speed of 360 rpm, and a block sample</span>
+<span class="sd">period of 0.5 seconds, the `readrate` can be calculated as follows:</span>
+
+<span class="sd">    readrate (rev) = 360 (rev/min) / 60 (s/min) * 0.5 (s) = 3</span>
+
+<span class="sd">Each block will contain `readrate` complete revolutions, each one with PPR</span>
+<span class="sd">(pulses per revolution) data points for each one of the measured channels.</span>
+
+<span class="sd">The `backlogSP` parameter defines the T7 backlog set point. Values around</span>
+<span class="sd">25 % seem reaonable. However, `backlogSP` and the PI gains `kp` and `ki`</span>
+<span class="sd">should be adjusted accordingly based on the application and how unsteady the</span>
+<span class="sd">angular speed is.</span>
+
+<span class="sd">A trigger port can be used so the angular ZERO position (and subsequent 360</span>
+<span class="sd">degree increments) line up with the trigger position. That can be accomplished</span>
+<span class="sd">by using the Z phase of a quadrature encoder, in this case, connected to the</span>
+<span class="sd">digital port DIO1.</span>
+
+<span class="sd">Setup:</span>
+<span class="sd">    You will need:</span>
+<span class="sd">    - Electric motor (I used a CQRobot DC 6V-183RPM/12V-366RPM)</span>
+<span class="sd">    - An encoder with a Z phase (I used a CALT GHS38 rotary encoder)</span>
+<span class="sd">    - A 12V variable power supply (so you can adjust the motor speed)</span>
+<span class="sd">    Phase A of the encoder is connected to CIO3 (the external clock source)</span>
+<span class="sd">    Phase Z is connected to DIO1 (the trigger reference marker)</span>
+
+<span class="sd">The LabJack methods in this example are:</span>
+<span class="sd">    set_stream ....... Sets LabJack configuration for data streaming</span>
+<span class="sd">    get_stream ....... Gets streaming data</span>
+<span class="sd">    stop_stream ...... Stops data streaming</span>
+<span class="sd">    close ............ Closes the LabJack device</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">labjack_unified.utils</span> <span class="kn">import</span> <span class="n">plot_line</span>
+<span class="kn">from</span> <span class="nn">labjack_unified.devices</span> <span class="kn">import</span> <span class="n">LabJackT7</span>
+<span class="c1">#</span>
+<span class="c1"># Make sure the motor is already running before you run this program!</span>
+<span class="c1">#</span>
+<span class="c1"># Assigning streaming parameters</span>
+<span class="n">speed0</span> <span class="o">=</span> <span class="mi">240</span> <span class="c1"># Expected angular speed (rpm)</span>
+<span class="n">readrate</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># Number of revolutions per read block</span>
+<span class="n">nblocks</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># Number of blocks to acquire</span>
+<span class="n">nmax</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># Maximum number of blocks for plotting</span>
+<span class="n">ppr</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># Encoder&#39;s pulses per revolution</span>
+<span class="c1"># Assining ports</span>
+<span class="n">portlist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DIO1&#39;</span><span class="p">]</span>
+<span class="n">porttrigger</span> <span class="o">=</span> <span class="s1">&#39;DIO1&#39;</span>
+<span class="c1"># Creating array with dummy values to enable concatenation</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">portlist</span><span class="p">)))</span>
+<span class="c1"># Preallocating output speed</span>
+<span class="n">speed</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># PI closed loop control of &quot;backlog&quot; size</span>
+<span class="n">backlogSP</span> <span class="o">=</span> <span class="mi">25</span> <span class="c1"># Desired &quot;backlog&quot; value (%)</span>
+<span class="n">backlog</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Backlog data</span>
+<span class="n">kp</span> <span class="o">=</span> <span class="mf">0.001</span> <span class="c1"># Proportional gain</span>
+<span class="n">ki</span> <span class="o">=</span> <span class="mf">0.0001</span> <span class="c1"># Integral gain</span>
+<span class="n">eprev</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Previous error value</span>
+<span class="n">uprev</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># Previous execution period adjustment factor</span>
+
+<span class="c1"># Calculating block duration (s)</span>
+<span class="n">Ts</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">readrate</span><span class="o">/</span><span class="n">speed0</span>
+<span class="c1"># Opening LabJack</span>
+<span class="n">lj</span> <span class="o">=</span> <span class="n">LabJackT7</span><span class="p">()</span>
+<span class="c1"># Closing motor relay</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">set_analog</span><span class="p">(</span><span class="s1">&#39;DAC0&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1"># Configuring streaming</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">set_stream</span><span class="p">(</span><span class="n">portlist</span><span class="p">,</span> <span class="n">scanrate</span><span class="o">=</span><span class="n">ppr</span><span class="p">,</span> <span class="n">readrate</span><span class="o">=</span><span class="n">readrate</span><span class="p">,</span>
+                <span class="n">clocksource</span><span class="o">=</span><span class="s1">&#39;EXT&#39;</span><span class="p">,</span> <span class="n">exttrigger</span><span class="o">=</span><span class="n">porttrigger</span><span class="p">)</span>
+<span class="c1"># Waiting for first block to become available</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">Ts</span><span class="p">)</span>
+<span class="c1"># Executing acquisition loop</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nblocks</span><span class="p">):</span>
+    <span class="c1"># Starting overhead time watch</span>
+    <span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="c1"># Getting one block of data</span>
+    <span class="n">dt</span><span class="p">,</span> <span class="n">datablock</span><span class="p">,</span> <span class="n">numscans</span><span class="p">,</span> <span class="n">commbacklog</span><span class="p">,</span> <span class="n">devbacklog</span> <span class="o">=</span> <span class="n">lj</span><span class="o">.</span><span class="n">get_stream</span><span class="p">()</span>
+    <span class="c1"># Appending only last `nmax`</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">nblocks</span><span class="o">-</span><span class="n">nmax</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">datablock</span><span class="p">))</span>
+    <span class="c1"># Calculating and storing angular speed</span>
+    <span class="n">speed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="n">readrate</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
+    <span class="c1"># Calculating backlog error to set point value</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">backlogSP</span> <span class="o">-</span> <span class="n">devbacklog</span>
+    <span class="c1"># Calculating execution period adjustment factor</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">uprev</span> <span class="o">+</span> <span class="n">kp</span><span class="o">*</span><span class="p">(</span><span class="n">e</span><span class="o">-</span><span class="n">eprev</span><span class="p">)</span> <span class="o">+</span> <span class="n">ki</span><span class="o">*</span><span class="n">Ts</span><span class="o">*</span><span class="n">e</span>
+    <span class="c1"># Updating previous values</span>
+    <span class="n">eprev</span> <span class="o">=</span> <span class="n">e</span>
+    <span class="n">uprev</span> <span class="o">=</span> <span class="n">u</span>
+    <span class="c1"># Storing backlog</span>
+    <span class="n">backlog</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">devbacklog</span><span class="p">)</span>
+    <span class="c1"># Showing statistics</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Block :&#39;</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scans :&#39;</span><span class="p">,</span> <span class="n">numscans</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Comm Backlog : </span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">commbacklog</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;U3 Backlog   : </span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">devbacklog</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Speed (rpm)  : </span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">speed</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="c1"># Pausing taking into account overhead and</span>
+    <span class="c1"># trying to control to a desired backlogSP</span>
+    <span class="n">thead</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tstart</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">*</span><span class="p">(</span><span class="n">Ts</span><span class="o">-</span><span class="n">thead</span><span class="p">)))</span>
+<span class="c1"># Stopping streaming</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">()</span>
+<span class="c1"># Opening motor relay</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">set_analog</span><span class="p">(</span><span class="s1">&#39;DAC0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Closing LabJack</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">del</span> <span class="n">lj</span>
+
+<span class="c1"># Removing first row of dummy data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+<span class="c1"># Creating angle array</span>
+<span class="n">ang</span> <span class="o">=</span> <span class="mi">360</span><span class="o">/</span><span class="n">ppr</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># Setting x and y arrays for plotting</span>
+<span class="n">naxes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">portlist</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">ang</span><span class="p">]</span> <span class="o">*</span> <span class="n">naxes</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">naxes</span><span class="p">)]</span>
+<span class="c1"># Plotting results</span>
+<span class="n">plot_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s1">&#39;Angle (deg.)&#39;</span><span class="p">,</span> <span class="n">yname</span><span class="o">=</span><span class="n">portlist</span><span class="p">)</span>
+<span class="n">plot_line</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nblocks</span><span class="p">)],</span> <span class="p">[</span><span class="n">speed</span><span class="p">],</span> <span class="n">xname</span><span class="o">=</span><span class="s1">&#39;Block Number&#39;</span><span class="p">,</span>
+        <span class="n">yname</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Motor Speed (rpm)&#39;</span><span class="p">])</span>
+<span class="n">plot_line</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nblocks</span><span class="p">)],</span> <span class="p">[</span><span class="n">backlog</span><span class="p">],</span> <span class="n">xname</span><span class="o">=</span><span class="s1">&#39;Block Number&#39;</span><span class="p">,</span>
+        <span class="n">yname</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;LabJack Backlog (%)&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="T7_Streaming_Internal.html" class="btn btn-neutral float-left" title="T7 Streaming (internal clock)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Eduardo Nigro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

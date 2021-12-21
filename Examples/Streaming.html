@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Streaming &mdash; Documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /><link rel="shortcut icon" href="../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Incremental Encoder" href="Incremental_Encoder.html" />
+    <link rel="prev" title="Digital I/O" href="Digital_IO.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> labjack-unified<img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../LabJackU3.html">LabJackU3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LabJackU6.html">LabJackU6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LabJackT7.html">LabJackT7</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Analog_IO.html">Analog I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Digital_IO.html">Digital I/O</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Incremental_Encoder.html">Incremental Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Absolute_Encoder.html">Absolute Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Electric_Motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Electric_Motor_with_Encoder.html">Electric Motor with Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="T7_Streaming_Internal.html">T7 Streaming (internal clock)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="T7_Streaming_External.html">T7 Streaming (external clock)</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">labjack-unified</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Examples</a> &raquo;</li>
+      <li>Streaming</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Examples/Streaming.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="streaming">
+<h1>Streaming<a class="headerlink" href="#streaming" title="Permalink to this headline"></a></h1>
+<p>In this example <a class="reference internal" href="#codestreaming"><span class="std std-ref">code</span></a>, data is acquired at 50,000 Samples/s, for two
+consecutive 0.5 s blocks. On a <strong>LabJack U3</strong>, two 183 Hz PWM signals are generated
+on ports <strong>FIO4</strong> and <strong>FIO5</strong>, and streamed into <strong>AIN0</strong> and <strong>AIN1</strong>, repectively.</p>
+<img alt="Examples/../../images/lj_streaming_fig_1.png" src="Examples/../../images/lj_streaming_fig_1.png" />
+<div class="highlight-python notranslate" id="codestreaming"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; lj_streaming.py</span>
+
+<span class="sd">Collects streaming data.</span>
+
+<span class="sd">Data is acquired at a user-defined `samplerate` up to 50000 Samples/s on a U3</span>
+<span class="sd">or a U6, and 100000 Samples/s on a T7. The effective sampling rate per channel</span>
+<span class="sd">is `samplerate` divided by the number of channels. Data blocks are collected</span>
+<span class="sd">at a user-defined `readrate&#39; in seconds. Typical values of 0.5 seconds are used</span>
+<span class="sd">for high sample rates.</span>
+
+<span class="sd">Setup:</span>
+<span class="sd">    In this example code, 2 PWM signals are generated on the following ports:</span>
+<span class="sd">    FIO4 and FIO5 on a U3</span>
+<span class="sd">    FIO0 and FIO1 on a U6</span>
+<span class="sd">    FIO0 and FIO4 on a T7</span>
+<span class="sd">    which in turn should be connected respectively to ports AIN0 and AIN1.</span>
+
+<span class="sd">The LabJack unified methods in this example are:</span>
+<span class="sd">    set_PWM .......... Sets LabJack configuration for PWM output</span>
+<span class="sd">    set_dutycycle .... Sets duty cycle of PWM output (-100 to 100)</span>
+<span class="sd">    set_stream ....... Sets LabJack configuration for data streaming</span>
+<span class="sd">    get_stream ....... Gets streaming data</span>
+<span class="sd">    stop_stream ...... Stops data streaming</span>
+<span class="sd">    close ............ Closes the LabJack device</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">labjack_unified.utils</span> <span class="kn">import</span> <span class="n">plot_line</span>
+<span class="kn">from</span> <span class="nn">labjack_unified.devices</span> <span class="kn">import</span> <span class="n">LabJackU3</span><span class="p">,</span> <span class="n">LabJackU6</span><span class="p">,</span> <span class="n">LabJackT7</span>
+
+<span class="c1"># To use a LabJack U6 or a T7, change the device name</span>
+<span class="c1"># from LabJackU3 below to either LabJackU6 or LabJackT7</span>
+<span class="n">lj</span> <span class="o">=</span> <span class="n">LabJackU3</span><span class="p">()</span>
+
+<span class="c1"># Assigning streaming parameters</span>
+<span class="n">samplerate</span> <span class="o">=</span> <span class="mi">50000</span> <span class="c1"># Samples/s</span>
+<span class="n">readrate</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Block size (s)</span>
+<span class="n">nblocks</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># Number of acquired blocks</span>
+<span class="n">portlist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span> <span class="s1">&#39;AIN1&#39;</span><span class="p">]</span>
+<span class="c1"># Creating array with dummy values to enable concatenation</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">portlist</span><span class="p">)))</span>
+
+<span class="c1"># Setting a PWM output</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="n">pwmnum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">183</span><span class="p">)</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">set_dutycycle</span><span class="p">(</span><span class="n">value1</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">value2</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="c1"># Configuring and starting streaming</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">set_stream</span><span class="p">(</span><span class="n">portlist</span><span class="p">,</span> <span class="n">scanrate</span><span class="o">=</span><span class="n">samplerate</span><span class="p">,</span> <span class="n">readrate</span><span class="o">=</span><span class="n">readrate</span><span class="p">)</span>
+<span class="c1"># Waiting for first block to become available</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">readrate</span><span class="p">)</span>
+<span class="c1"># Executing acquisition loop</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nblocks</span><span class="p">):</span>
+    <span class="c1"># Starting computational overhead time watch</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="c1"># Getting one block of data</span>
+    <span class="n">dt</span><span class="p">,</span> <span class="n">datablock</span><span class="p">,</span> <span class="n">numscans</span><span class="p">,</span> <span class="n">commbacklog</span><span class="p">,</span> <span class="n">U3backlog</span> <span class="o">=</span> <span class="n">lj</span><span class="o">.</span><span class="n">get_stream</span><span class="p">()</span>
+    <span class="c1"># Concatenating new data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">datablock</span><span class="p">))</span>
+    <span class="c1"># Showing statistics</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Block :&#39;</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scans :&#39;</span><span class="p">,</span> <span class="n">numscans</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Comm Backlog : </span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">commbacklog</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;U3 Backlog   : </span><span class="si">{:0.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">U3backlog</span><span class="p">))</span>
+    <span class="c1"># Pausing taking into account computation overhead</span>
+    <span class="n">thead</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t0</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">readrate</span><span class="o">-</span><span class="n">thead</span><span class="p">)</span>
+<span class="c1"># Stopping streaming</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">()</span>
+<span class="c1"># Closing LabJack</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">del</span> <span class="n">lj</span>
+
+<span class="c1"># Removing first row of dummy data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">::,</span> <span class="p">:]</span>
+<span class="c1"># Creating time array</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># Setting x and y arrays for plotting</span>
+<span class="n">naxes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">portlist</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">*</span> <span class="n">naxes</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">naxes</span><span class="p">)]</span>
+<span class="c1"># Plotting results</span>
+<span class="n">plot_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">yname</span><span class="o">=</span><span class="n">portlist</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;multi&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Digital_IO.html" class="btn btn-neutral float-left" title="Digital I/O" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Incremental_Encoder.html" class="btn btn-neutral float-right" title="Incremental Encoder" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Eduardo Nigro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

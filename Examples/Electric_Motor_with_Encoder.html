@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electric Motor with Encoder &mdash; Documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /><link rel="shortcut icon" href="../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="T7 Streaming (internal clock)" href="T7_Streaming_Internal.html" />
+    <link rel="prev" title="Electric Motor" href="Electric_Motor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> labjack-unified<img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../LabJackU3.html">LabJackU3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LabJackU6.html">LabJackU6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LabJackT7.html">LabJackT7</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Analog_IO.html">Analog I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Digital_IO.html">Digital I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Streaming.html">Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Incremental_Encoder.html">Incremental Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Absolute_Encoder.html">Absolute Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Electric_Motor.html">Electric Motor</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Electric Motor with Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="T7_Streaming_Internal.html">T7 Streaming (internal clock)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="T7_Streaming_External.html">T7 Streaming (external clock)</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">labjack-unified</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Examples</a> &raquo;</li>
+      <li>Electric Motor with Encoder</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Examples/Electric_Motor_with_Encoder.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="electric-motor-with-encoder">
+<h1>Electric Motor with Encoder<a class="headerlink" href="#electric-motor-with-encoder" title="Permalink to this headline"></a></h1>
+<p>In this example code, the motor speed is ramps up for 5 seconds and down for 5 seconds,
+as the PWM output is ramped linearly from 0 to 100 % and then back to 0. The encoder is
+used to measure the shaft angular position, from which the motor speed can be calulated.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; lj_motor_encoder.py</span>
+
+<span class="sd">Uses PWM to set the speed of DC electric motor and an encoder do measure it.</span>
+
+<span class="sd">This example shows how to use the PWM output to change the speed of a DC motor.</span>
+<span class="sd">The PWM output is ramped up to 100% and then back down to 0%.</span>
+
+<span class="sd">Setup:</span>
+<span class="sd">    You will need:</span>
+<span class="sd">    - Electric motor with encoder (I used a CQRobot DC 6V-183RPM/12V-366RPM)</span>
+<span class="sd">    - An H-Bridge (I used a DROK L298 Dual H Bridge Motor Speed Controller)</span>
+<span class="sd">    - A 12V power supply</span>
+<span class="sd">    Connect DAC0 to the bridge DIR1 (or IN1)</span>
+<span class="sd">    Connect DAC1 to the bridge DIR2 (or IN2)</span>
+<span class="sd">    On a U6, connect FIO2 to the bridge PWM IN (or ENA)</span>
+<span class="sd">    On a T7, connect FIO0 to the bridge PWM IN (or ENA)</span>
+<span class="sd">    Connect the bridge Vcc and GND to the LabJack VS and GND respectively</span>
+<span class="sd">    On a U6, connect FIO0 to phase A and FIO1 to phase B</span>
+<span class="sd">    On a T7, connect FIO2 to phase A and FIO3 to phase B</span>
+<span class="sd">    Connect the encoder Vcc and GND to the LabJack VS and GND respectively</span>
+
+<span class="sd">The LabJack methods in this example are:</span>
+<span class="sd">    set_PWM .......... Sets LabJack configuration for PWM output</span>
+<span class="sd">    set_dutycycle .... Sets duty cycle of PWM output (-100 to 100)</span>
+<span class="sd">    set_pwm_quad ..... Sets simultaneous PWM output and encoder input (U6)</span>
+<span class="sd">    close ............ Closes the LabJack device</span>
+
+<span class="sd">Notes:</span>
+<span class="sd">    1. LabJack U3 does not have enought timers to run a PWM and a quadrature</span>
+<span class="sd">    encoder at the sme time.</span>
+<span class="sd">    2. LabJack U6 has a special method (set_pwm_quad) to configure both the PWM</span>
+<span class="sd">    output and the quadrature input at the same time.</span>
+<span class="sd">    3. If the measured speed is negative, either switch the direction wires</span>
+<span class="sd">    connected to DAC0 and DAC1, or the encoder phase wires connected to FIO0</span>
+<span class="sd">    and FIO1.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
+<span class="kn">from</span> <span class="nn">labjack_unified.utils</span> <span class="kn">import</span> <span class="n">plot_line</span>
+<span class="kn">from</span> <span class="nn">labjack_unified.devices</span> <span class="kn">import</span> <span class="n">LabJackU6</span><span class="p">,</span> <span class="n">LabJackT7</span>
+
+<span class="c1"># To use a LabJack T7, change the device name</span>
+<span class="c1"># below from LabJackU6 below to LabJackT7</span>
+<span class="n">lj</span> <span class="o">=</span> <span class="n">LabJackU6</span><span class="p">()</span>
+
+<span class="c1"># Assigning parameters</span>
+<span class="n">tramp</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># PWM ramp up/down time (s)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Output time array</span>
+<span class="n">pwm</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Output pwm signal array</span>
+<span class="n">w</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Motor angular speed array (rad/s)</span>
+
+<span class="k">if</span> <span class="n">lj</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">LabJackU6</span><span class="p">:</span>
+    <span class="c1"># Configuring PWM and quadrature at the same time</span>
+    <span class="n">lj</span><span class="o">.</span><span class="n">set_pwm_quad</span><span class="p">()</span>
+<span class="k">elif</span> <span class="n">lj</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">LabJackT7</span><span class="p">:</span>
+    <span class="c1"># Configuring PWM putput</span>
+    <span class="n">lj</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="n">dirport1</span><span class="o">=</span><span class="s1">&#39;DAC&#39;</span><span class="p">)</span>
+    <span class="c1"># Setting quadrature incremental encoder</span>
+    <span class="n">lj</span><span class="o">.</span><span class="n">set_quadrature</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;LabJack U3 does not support this feature.&#39;</span><span class="p">)</span>
+<span class="c1"># Defining encoder pulses per revolution</span>
+<span class="c1"># (Because rising and falling edges on phases A and B</span>
+<span class="c1">#  are counted, multiply the encoder PPR by 4)</span>
+<span class="n">ppr</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">300</span>
+
+<span class="c1"># Initializing timers and starting main clock</span>
+<span class="n">angleprev</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">tprev</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">tcurr</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="c1"># Executing acquisition loop</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Running code for &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">tramp</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; seconds ...&#39;</span><span class="p">)</span>
+<span class="k">while</span> <span class="n">tcurr</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="o">*</span><span class="n">tramp</span><span class="p">:</span>
+    <span class="c1"># Updating previous time and getting current time (s)</span>
+    <span class="n">tcurr</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">tstart</span>
+    <span class="c1"># Calculating pwm output</span>
+    <span class="k">if</span> <span class="n">tcurr</span> <span class="o">&lt;</span> <span class="n">tramp</span><span class="p">:</span>
+        <span class="c1"># Ramping up to 100% for the first `tramp` seconds</span>
+        <span class="n">pwmcurr</span> <span class="o">=</span> <span class="mi">100</span><span class="o">/</span><span class="n">tramp</span><span class="o">*</span><span class="n">tcurr</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Ramping down to 0% for the last `tramp` seconds</span>
+        <span class="n">pwmcurr</span> <span class="o">=</span> <span class="mi">100</span><span class="o">-</span><span class="mi">100</span><span class="o">/</span><span class="n">tramp</span><span class="o">*</span><span class="p">(</span><span class="n">tcurr</span><span class="o">-</span><span class="n">tramp</span><span class="p">)</span>
+    <span class="c1"># Updating PWM output</span>
+    <span class="n">lj</span><span class="o">.</span><span class="n">set_dutycycle</span><span class="p">(</span><span class="n">value1</span><span class="o">=</span><span class="n">pwmcurr</span><span class="p">)</span>
+    <span class="c1"># Getting angular position of the encoder</span>
+    <span class="n">anglecurr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">ppr</span> <span class="o">*</span> <span class="n">lj</span><span class="o">.</span><span class="n">get_counter</span><span class="p">()</span>
+    <span class="c1"># Calculating current angular speed (rad/s)</span>
+    <span class="n">wcurr</span> <span class="o">=</span> <span class="p">(</span><span class="n">anglecurr</span> <span class="o">-</span> <span class="n">angleprev</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">tcurr</span> <span class="o">-</span> <span class="n">tprev</span><span class="p">)</span>
+    <span class="c1"># Updating previous values</span>
+    <span class="n">angleprev</span> <span class="o">=</span> <span class="n">anglecurr</span>
+    <span class="n">tprev</span> <span class="o">=</span> <span class="n">tcurr</span>
+    <span class="c1"># Appending values to output arrays</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tcurr</span><span class="p">)</span>
+    <span class="n">pwm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pwmcurr</span><span class="p">)</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wcurr</span><span class="p">)</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">set_dutycycle</span><span class="p">(</span><span class="n">value1</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done.&#39;</span><span class="p">)</span>
+<span class="c1"># Closing the device</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">del</span> <span class="n">lj</span>
+
+<span class="c1"># Filtering motor speed</span>
+<span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">butter</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">wf</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">filtfilt</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;gust&#39;</span><span class="p">)</span>
+<span class="c1"># Plotting results</span>
+<span class="n">plot_line</span><span class="p">([</span><span class="n">t</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="n">pwm</span><span class="p">,</span> <span class="n">wf</span><span class="p">],</span>
+        <span class="n">yname</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PWM OUtput (%)&#39;</span><span class="p">,</span> <span class="s1">&#39;Filt. Motor Speed (rad/s)&#39;</span><span class="p">],</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;multi&#39;</span><span class="p">)</span>
+<span class="n">plot_line</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">::]],</span> <span class="p">[</span><span class="mi">1000</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">t</span><span class="p">)],</span> <span class="n">yname</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sampling Period (ms)&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Electric_Motor.html" class="btn btn-neutral float-left" title="Electric Motor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="T7_Streaming_Internal.html" class="btn btn-neutral float-right" title="T7 Streaming (internal clock)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Eduardo Nigro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LabJackT7 &mdash; Documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" /><link rel="shortcut icon" href="_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="Examples/index.html" />
+    <link rel="prev" title="LabJackU6" href="LabJackU6.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> labjack-unified<img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="LabJackU3.html">LabJackU3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LabJackU6.html">LabJackU6</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">LabJackT7</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#i-o">I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#streaming">Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pwm">PWM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quadrature">Quadrature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#thermocouple">Thermocouple</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/index.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">labjack-unified</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>LabJackT7</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/LabJackT7.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="labjackt7">
+<h1>LabJackT7<a class="headerlink" href="#labjackt7" title="Permalink to this headline"></a></h1>
+<img alt="_images/LabJackT7.png" src="_images/LabJackT7.png" />
+<dl class="class">
+<dt id="devices.LabJackT7">
+<em class="property">class </em><code class="sig-prename descclassname">devices.</code><code class="sig-name descname">LabJackT7</code><span class="sig-paren">(</span><em class="sig-param">serialnum=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7" title="Permalink to this definition"></a></dt>
+<dd><p>The class to represent the LabJack T7</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>serialnum</strong> (<em>int</em>) – The device serial number.</p>
+</dd>
+</dl>
+<p>Ports that are made available with this class are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Analog Output (0 to 5V) : <code class="docutils literal notranslate"><span class="pre">'DAC0'</span></code> , <code class="docutils literal notranslate"><span class="pre">'DAC1'</span></code></p></li>
+<li><p>Analog Input (+/-10V)   : <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code> , <code class="docutils literal notranslate"><span class="pre">'AIN1'</span></code>, … , <code class="docutils literal notranslate"><span class="pre">'AIN13'</span></code></p></li>
+<li><p>Digital I/O             : <code class="docutils literal notranslate"><span class="pre">'FIO0'</span></code> , <code class="docutils literal notranslate"><span class="pre">'FIO1'</span></code>, … , <code class="docutils literal notranslate"><span class="pre">'FIO7'</span></code></p></li>
+<li><p>Digital I/O             : <code class="docutils literal notranslate"><span class="pre">'EIO0'</span></code> , <code class="docutils literal notranslate"><span class="pre">'EIO1'</span></code>, … , <code class="docutils literal notranslate"><span class="pre">'EIO7'</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>Device-specific methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>set_range</cite> - Sets analog input voltage range</p></li>
+<li><p><cite>set_reference</cite> - Sets analog input reference voltage point</p></li>
+<li><p><cite>set_TC</cite> - Sets LabJack configuration for thermocouple input</p></li>
+<li><p><cite>get_TCtemp</cite> - Gets thermocouple temperature reading</p></li>
+</ul>
+</div></blockquote>
+<p>Connect to the first found T7:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">labjack_unified.devices</span> <span class="kn">import</span> <span class="n">LabJackT7</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span> <span class="o">=</span> <span class="n">LabJackT7</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">display_info</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can also connect to a specific device using its serial number.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span> <span class="o">=</span> <span class="n">LabJackT7</span><span class="p">(</span><span class="mi">370012345</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<section id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline"></a></h2>
+<blockquote>
+<div><dl class="method">
+<dt id="devices.LabJackT7.close">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.close" title="Permalink to this definition"></a></dt>
+<dd><p>Close the T7 device connection.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.display_info">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">display_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.display_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.display_info" title="Permalink to this definition"></a></dt>
+<dd><p>Display a summary with the T7 device information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.get_labjacktemp">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">get_labjacktemp</code><span class="sig-paren">(</span><em class="sig-param">unit='C'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.get_labjacktemp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.get_labjacktemp" title="Permalink to this definition"></a></dt>
+<dd><p>Get ambient temperature from LabJack’s internal sensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unit</strong> (<em>str</em>) – The temperature measurement unit.
+Valid values are <code class="docutils literal notranslate"><span class="pre">'C'</span></code> or <code class="docutils literal notranslate"><span class="pre">'F'</span></code>. Default unit is <code class="docutils literal notranslate"><span class="pre">'C'</span></code>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The internal sensor temperature reading.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p>Get temperature reading in <cite>Celsius</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">get_labjacktemp</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Get temperature reading in <cite>Fahrenheit</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">get_labjacktemp</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div></blockquote>
+</section>
+<section id="i-o">
+<h2>I/O<a class="headerlink" href="#i-o" title="Permalink to this headline"></a></h2>
+<blockquote>
+<div><dl class="method">
+<dt id="devices.LabJackT7.set_digital">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">set_digital</code><span class="sig-paren">(</span><em class="sig-param">names</em>, <em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.set_digital"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.set_digital" title="Permalink to this definition"></a></dt>
+<dd><p>Write the digital state to an output port.
+It also sets the port direction to output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>list</em><em>(</em><em>str</em><em>)</em>) – The port name (or a list of names) to set the state.</p></li>
+<li><p><strong>state</strong> (<em>int</em><em>, </em><em>list</em><em>(</em><em>int</em><em>)</em>) – The digital state (or a list of states)
+<cite>0 = Low</cite>, <cite>1 = High</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Set port <code class="docutils literal notranslate"><span class="pre">'FIO0'</span></code> bit to high:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_digital</span><span class="p">(</span><span class="s1">&#39;FIO0&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set ports <code class="docutils literal notranslate"><span class="pre">'FIO0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'FIO1'</span></code> and <code class="docutils literal notranslate"><span class="pre">'FIO6'</span></code> bits to high,
+low and high:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_digital</span><span class="p">([</span><span class="s1">&#39;FIO0&#39;</span><span class="p">,</span> <span class="s1">&#39;FIO1&#39;</span><span class="p">,</span> <span class="s1">&#39;FIO6&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.get_digital">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">get_digital</code><span class="sig-paren">(</span><em class="sig-param">names</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.get_digital"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.get_digital" title="Permalink to this definition"></a></dt>
+<dd><p>Read the digital state from an input port.
+It also sets the port direction to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>list</em><em>(</em><em>str</em><em>)</em>) – The port name (or list of port names) to get the state.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The state of the digital port. <cite>0 = Low</cite>, <cite>1 = High</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int, list(int)</p>
+</dd>
+</dl>
+<p>Get logic state on port <code class="docutils literal notranslate"><span class="pre">'FIO2'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">get_digital</span><span class="p">(</span><span class="s1">&#39;FIO2&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Get logic states on ports <code class="docutils literal notranslate"><span class="pre">'FIO2'</span></code>, <code class="docutils literal notranslate"><span class="pre">'FIO3'</span></code> and <code class="docutils literal notranslate"><span class="pre">'FIO7'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">get_digital</span><span class="p">([</span><span class="s1">&#39;FIO2&#39;</span><span class="p">,</span> <span class="s1">&#39;FIO3&#39;</span><span class="p">,</span> <span class="s1">&#39;FIO7&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.set_analog">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">set_analog</code><span class="sig-paren">(</span><em class="sig-param">names</em>, <em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.set_analog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.set_analog" title="Permalink to this definition"></a></dt>
+<dd><p>Set analog output voltage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>list</em><em>(</em><em>str</em><em>)</em>) – The port name to set the output voltage.
+Available ports are <code class="docutils literal notranslate"><span class="pre">'DAC0'</span></code> and <code class="docutils literal notranslate"><span class="pre">'DAC1'</span></code>. Both ports can be
+set at the same time using a list containing the two names.</p></li>
+<li><p><strong>value</strong> (<em>float</em><em>, </em><em>list</em><em>(</em><em>float</em><em>)</em>) – The output voltage between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">5</span></code> V. A list
+containing values can be used in conjunction with a list with the
+two port names.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Set port <code class="docutils literal notranslate"><span class="pre">'DAC1'</span></code> output voltage to <code class="docutils literal notranslate"><span class="pre">2.2</span></code> V:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_analog</span><span class="p">(</span><span class="s1">&#39;DAC1&#39;</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set port <code class="docutils literal notranslate"><span class="pre">'DAC0'</span></code> output voltage to <code class="docutils literal notranslate"><span class="pre">2.5</span></code> V and <code class="docutils literal notranslate"><span class="pre">'DAC1'</span></code> to
+<code class="docutils literal notranslate"><span class="pre">3.2</span></code> V:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_analog</span><span class="p">([</span><span class="s1">&#39;DAC0&#39;</span><span class="p">,</span> <span class="s1">&#39;DAC1&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.get_analog">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">get_analog</code><span class="sig-paren">(</span><em class="sig-param">names</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.get_analog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.get_analog" title="Permalink to this definition"></a></dt>
+<dd><p>Get analog input voltage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>list</em><em>(</em><em>str</em><em>)</em>) – THe port name (or list of names) to get the input voltage.
+Ports <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code> to <code class="docutils literal notranslate"><span class="pre">'AIN13'</span></code> are possible names and can read a
+range between -10 and +10V.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The input voltage value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float, list(float)</p>
+</dd>
+</dl>
+<p>Get input voltage on port <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">get_analog</span><span class="p">(</span><span class="s1">&#39;AIN0&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Get input voltages on ports <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'AIN2'</span></code> and <code class="docutils literal notranslate"><span class="pre">'AIN3'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">get_analog</span><span class="p">([</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span> <span class="s1">&#39;AIN2&#39;</span><span class="p">,</span> <span class="s1">&#39;AIN3&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>Ports that are not connected may have erratic readings.</p></li>
+<li><p>See <cite>set_range</cite> and <cite>set_reference</cite> for more options on analog inputs.</p></li>
+</ol>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.set_range">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">set_range</code><span class="sig-paren">(</span><em class="sig-param">names</em>, <em class="sig-param">ranges</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.set_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.set_range" title="Permalink to this definition"></a></dt>
+<dd><p>Set analog input voltage range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names</strong> (<em>str</em><em>, </em><em>list</em><em>(</em><em>str</em><em>)</em>) – The analog port(s) that will have their ranges modified.
+Use <code class="docutils literal notranslate"><span class="pre">'ALL'</span></code> to set all analog input ports to the same range.</p></li>
+<li><p><strong>ranges</strong> (<em>float</em><em>, </em><em>list</em><em>(</em><em>float</em><em>)</em>) – The voltage range value to be used.
+Valid ranges are +/- <code class="docutils literal notranslate"><span class="pre">10</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">0.01</span></code> V. If a
+single value is used, it will be applied to all ports in
+<cite>names</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Set port <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code> with a range of +/- <code class="docutils literal notranslate"><span class="pre">1</span></code> V:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_range</span><span class="p">(</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set port <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code> and <code class="docutils literal notranslate"><span class="pre">'AIN2'</span></code> with a range of +/- <code class="docutils literal notranslate"><span class="pre">0.1</span></code> and
+<code class="docutils literal notranslate"><span class="pre">0.01</span></code> V:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_range</span><span class="p">([</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span> <span class="s1">&#39;AIN2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Set all ports with a (default) range of +/- <code class="docutils literal notranslate"><span class="pre">10</span></code> V:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_range</span><span class="p">(</span><span class="s1">&#39;ALL&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.set_reference">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">set_reference</code><span class="sig-paren">(</span><em class="sig-param">names</em>, <em class="sig-param">mode='single-ended'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.set_reference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.set_reference" title="Permalink to this definition"></a></dt>
+<dd><p>Set reference point for analog input voltage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names</strong> (<em>str</em><em>, </em><em>list</em><em>(</em><em>str</em><em>)</em>) – The analog port(s) that will that will have the voltage
+reference point modified.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – The reference mode for the analog ports.
+It and can be either <code class="docutils literal notranslate"><span class="pre">'single-ended'</span></code> or <code class="docutils literal notranslate"><span class="pre">'differential'</span></code>.
+Default is <code class="docutils literal notranslate"><span class="pre">'single-ended'</span></code>. Use <code class="docutils literal notranslate"><span class="pre">'ALL'</span></code> to set all analog
+input ports to the same mode.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Set port <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code> for differential reading with port <code class="docutils literal notranslate"><span class="pre">'AIN1'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_reference</span><span class="p">(</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span> <span class="n">differential</span><span class="s1">&#39;)</span>
+</pre></div>
+</div>
+<p>Set ports <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'AIN2'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'AIN6'</span></code> for differential
+reading respecitvely with ports <code class="docutils literal notranslate"><span class="pre">'AIN1'</span></code>, <code class="docutils literal notranslate"><span class="pre">'AIN3'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'AIN7'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_reference</span><span class="p">([</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span> <span class="s1">&#39;AIN2&#39;</span><span class="p">,</span> <span class="s1">&#39;AIN6&#39;</span><span class="p">],</span> <span class="s1">&#39;differential&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set all ports for single-ended reading:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_reference</span><span class="p">(</span><span class="s1">&#39;ALL&#39;</span><span class="p">,</span> <span class="s1">&#39;single-ended&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Differential reading uses two consecutive even-odd ports.
+Valid ports for differential reading are AIN0/2/4/6/8/10/12.</p>
+</div>
+</dd></dl>
+
+</div></blockquote>
+</section>
+<section id="streaming">
+<h2>Streaming<a class="headerlink" href="#streaming" title="Permalink to this headline"></a></h2>
+<blockquote>
+<div><dl class="method">
+<dt id="devices.LabJackT7.set_stream">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">set_stream</code><span class="sig-paren">(</span><em class="sig-param">names</em>, <em class="sig-param">scanrate=100000</em>, <em class="sig-param">readrate=0.5</em>, <em class="sig-param">clocksource='INT'</em>, <em class="sig-param">exttrigger=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.set_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.set_stream" title="Permalink to this definition"></a></dt>
+<dd><p>Set and start data streaming.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>list</em><em>(</em><em>str</em><em>)</em>) – The port name (or list of names) to be streamed.
+Any analog and/or digital port can be used.</p></li>
+<li><p><strong>scanrate</strong> (<em>int</em>) – The scan rate (Hz) of the data streaming. 
+The default (and maximum) value is <code class="docutils literal notranslate"><span class="pre">100000</span></code> Hz. The effective
+scan frequency of each port is the scan rate divided by the
+number of scanned ports. When <cite>clocksource</cite> is equal to
+<code class="docutils literal notranslate"><span class="pre">'EXT'</span></code>, <cite>scanrate</cite> is interpreted as the number of pulses per
+block of data.</p></li>
+<li><p><strong>readrate</strong> (<em>float</em>) – The rate in seconds at which blocks of data are
+retrieved from the data buffer by <cite>get_stream</cite>. The default value
+is <code class="docutils literal notranslate"><span class="pre">0.5</span></code> seconds. When <cite>clocksource</cite> is equal to <code class="docutils literal notranslate"><span class="pre">'EXT'</span></code>,
+<cite>readrate</cite> is interpreted as the number of blocks of data to be
+retrieved each time.</p></li>
+<li><p><strong>clocksource</strong> (<em>str</em>) – The source of the streaming clock.
+It indicates whether the LabJack internal clock or an external
+clock (pulse train) will be used. In the case of an external clock,
+the digital signal must be connected to <code class="docutils literal notranslate"><span class="pre">'CIO3'</span></code> (<code class="docutils literal notranslate"><span class="pre">'DIO16'</span></code>).
+The default value is <code class="docutils literal notranslate"><span class="pre">'INT'</span></code>.</p></li>
+<li><p><strong>exttrigger</strong> (<em>str</em>) – The <cite>DIO</cite> port name containing an external trigger
+used to start the streaming.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Configure <code class="docutils literal notranslate"><span class="pre">100000</span></code> Hz streaming with <code class="docutils literal notranslate"><span class="pre">0.5</span></code> s data blocks from port
+<code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_stream</span><span class="p">(</span><span class="s1">&#39;AIN0&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Configure streaming for <code class="docutils literal notranslate"><span class="pre">1</span></code> s data blocks from analog and digital
+ports.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_stream</span><span class="p">([</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span> <span class="s1">&#39;AIN1&#39;</span><span class="p">,</span> <span class="s1">&#39;DIO6&#39;</span><span class="p">,</span> <span class="s1">&#39;DIO7&#39;</span><span class="p">],</span> <span class="n">readrate</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Configure streaming for <code class="docutils literal notranslate"><span class="pre">0.5</span></code> s data blocks from analog ports.
+The scan rate is <code class="docutils literal notranslate"><span class="pre">50000</span></code> Samples/s (25000 S/s for each port):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_stream</span><span class="p">([</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span><span class="s1">&#39;AIN1&#39;</span><span class="p">],</span> <span class="n">scanrate</span><span class="o">=</span><span class="mi">50000</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Configure streaming for 1 block of 1024 Samples/port per data retrieve.
+The external clock signal must be connected to <code class="docutils literal notranslate"><span class="pre">'CIO3'</span></code>
+(<code class="docutils literal notranslate"><span class="pre">'DIO16'</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_stream</span><span class="p">([</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span><span class="s1">&#39;AIN1&#39;</span><span class="p">],</span> <span class="n">scanrate</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">readrate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">clocksource</span><span class="o">=</span><span class="s1">&#39;EXT&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Configure streaming for 3 blocks of 600 Samples/port.
+Port <code class="docutils literal notranslate"><span class="pre">'DIO1'</span></code> is connected to an external trigger that will start the
+streaming. The external clock signal must be connected to <code class="docutils literal notranslate"><span class="pre">'CIO3'</span></code>
+(<code class="docutils literal notranslate"><span class="pre">'DIO16'</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_stream</span><span class="p">([</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span><span class="s1">&#39;DIO0&#39;</span><span class="p">],</span>
+<span class="go">                    scanrate=600, readrate=3, clocksource=&#39;EXT&#39;,</span>
+<span class="go">                    exttrigger=&#39;DIO1&#39;)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><cite>exttrigger</cite> port must use the <cite>DIO</cite> naming convention, i.e.: ports
+<code class="docutils literal notranslate"><span class="pre">'DIO0'</span></code> to <code class="docutils literal notranslate"><span class="pre">'DIO16'</span></code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Data streaming starts immediatelly after <cite>set_stream</cite> is invoked,
+unless <cite>exttrigger</cite> is used.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.stop_stream">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">stop_stream</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.stop_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.stop_stream" title="Permalink to this definition"></a></dt>
+<dd><p>Stop data streaming.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.get_stream">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">get_stream</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.get_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.get_stream" title="Permalink to this definition"></a></dt>
+<dd><p>Get streaming data block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>5-tuple</p>
+<ul>
+<li><p>dt</p>
+<blockquote>
+<div><p>The sampling period (s) between each data point.
+When the streaming is configured with an external clock, <cite>dt</cite>
+contains the delta times between two consecutive samples.</p>
+</div></blockquote>
+</li>
+<li><p>data</p>
+<blockquote>
+<div><p>The numpy <cite>m-by-n</cite> array containing the streamed data where
+<cite>m</cite> is the number of samples per port in the block and <cite>n</cite>
+is the number of ports defined in <cite>set_stream</cite></p>
+</div></blockquote>
+</li>
+<li><p>numscans</p>
+<blockquote>
+<div><p>The actual number of scans per port in the data block.</p>
+</div></blockquote>
+</li>
+<li><p>commbacklog</p>
+<blockquote>
+<div><p>The communication backlog in % (increasing values indicate that
+the computer cannot keep up with the data download from the T7
+driver)</p>
+</div></blockquote>
+</li>
+<li><p>devbacklog</p>
+<blockquote>
+<div><p>The T7 device backlog in % (increasing values indicate that the
+device cannot keep up with the data streaming - usually not
+the case)</p>
+</div></blockquote>
+</li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(float, ndarray, int, float, float)</p>
+</dd>
+</dl>
+<p>Retrieve one data block:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span><span class="p">,</span> <span class="n">datablock</span><span class="p">,</span> <span class="n">commbacklog</span><span class="p">,</span> <span class="n">T7backlog</span> <span class="o">=</span> <span class="n">ljt7</span><span class="o">.</span><span class="n">get_stream</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Create the time array for the acquired block (internal clock):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">datablock</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">datablock</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div></blockquote>
+</section>
+<section id="pwm">
+<h2>PWM<a class="headerlink" href="#pwm" title="Permalink to this headline"></a></h2>
+<blockquote>
+<div><dl class="method">
+<dt id="devices.LabJackT7.set_pwm">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">set_pwm</code><span class="sig-paren">(</span><em class="sig-param">pwmnum=1</em>, <em class="sig-param">dirport1=None</em>, <em class="sig-param">dirport2=None</em>, <em class="sig-param">frequency=250</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.set_pwm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.set_pwm" title="Permalink to this definition"></a></dt>
+<dd><p>Configure PWM output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pwmnum</strong> (<em>int</em>) – The number of PWM output signals.
+<code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code> PWMs can be used. For one PWM, the output port is
+<code class="docutils literal notranslate"><span class="pre">'FIO0'</span></code>. For two PWMs, the output ports are <code class="docutils literal notranslate"><span class="pre">'FIO0'</span></code> and 
+<code class="docutils literal notranslate"><span class="pre">'FIO4'</span></code>.</p></li>
+<li><p><strong>dirport1</strong> (<em>None</em><em>, </em><em>str</em>) – <p>The type of ports that control the PWM <cite>direction</cite>
+for electric motor control. There are three options:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>  - Default value (no direction ports are used)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'DAC'</span></code> - Uses analog ports <code class="docutils literal notranslate"><span class="pre">'DAC0'</span></code> and <code class="docutils literal notranslate"><span class="pre">'DAC1'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'DIO'</span></code> - Uses digital ports <code class="docutils literal notranslate"><span class="pre">'EIO0'</span></code> and <code class="docutils literal notranslate"><span class="pre">'EIO1'</span></code></p></li>
+</ul>
+</p></li>
+<li><p><strong>dirport2</strong> (<em>None</em><em>, </em><em>str</em>) – Same as <cite>dirport1</cite>.
+It’s used when two PWM outputs are enabled. The <code class="docutils literal notranslate"><span class="pre">'DAC'</span></code> option
+can only be used for one set of direction ports, unless the two
+motors are running synchronously. For the <code class="docutils literal notranslate"><span class="pre">'DIO'</span></code> option,
+digital ports <code class="docutils literal notranslate"><span class="pre">'EIO2'</span></code> and <code class="docutils literal notranslate"><span class="pre">'EIO3'</span></code> are used.</p></li>
+<li><p><strong>frequency</strong> (<em>int</em>) – The PWM signal frequency in Hz.
+In the case of two PWMs, both will have the same frequency</p></li>
+</ul>
+</dd>
+</dl>
+<p>Set 1 PWM for motor control on <code class="docutils literal notranslate"><span class="pre">'FIO0'</span></code> with direction ports on
+<code class="docutils literal notranslate"><span class="pre">'DAC0'</span></code> and <code class="docutils literal notranslate"><span class="pre">'DAC1'</span></code>. The PWM frequency is the default <code class="docutils literal notranslate"><span class="pre">250</span></code> Hz:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="n">dirport1</span><span class="o">=</span><span class="s1">&#39;DAC&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set 2 PWMs on ports <code class="docutils literal notranslate"><span class="pre">'FIO0'</span></code> and <code class="docutils literal notranslate"><span class="pre">'FIO4'</span></code> with a frequency of
+<code class="docutils literal notranslate"><span class="pre">500</span></code> Hz:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="n">pwmnum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set 2 PWMs for motor control on ports <code class="docutils literal notranslate"><span class="pre">'FIO0'</span></code> and <code class="docutils literal notranslate"><span class="pre">'FIO4'</span></code>, using
+the digital ports <code class="docutils literal notranslate"><span class="pre">'EIO0'</span></code> and <code class="docutils literal notranslate"><span class="pre">'EIO1'</span></code> for motor 1 direction, and
+<code class="docutils literal notranslate"><span class="pre">'EIO2'</span></code> and <code class="docutils literal notranslate"><span class="pre">'EIO3'</span></code> for motor 2 direction. The PWM frequency is
+<code class="docutils literal notranslate"><span class="pre">750</span></code> Hz:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_pwm</span><span class="p">(</span><span class="n">pwmnum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dirport1</span><span class="o">=</span><span class="s1">&#39;DIO&#39;</span><span class="p">,</span> <span class="n">dirport2</span><span class="o">=</span><span class="s1">&#39;DIO&#39;</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">750</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When using digital ports, a 10 kOhm resistor has to be connected from
+the LabJack <cite>VS</cite> port to each one of the <cite>DIO</cite> ports to ensure true
+<cite>high</cite> and <cite>low</cite> states.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Two PWMs and two encoders can be setup at the same time on the T7 device.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.set_dutycycle">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">set_dutycycle</code><span class="sig-paren">(</span><em class="sig-param">value1=None</em>, <em class="sig-param">value2=None</em>, <em class="sig-param">brake1=False</em>, <em class="sig-param">brake2=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.set_dutycycle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.set_dutycycle" title="Permalink to this definition"></a></dt>
+<dd><p>Set PWM duty cycle value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value1</strong> (<em>float</em>) – The PWM 1 duty cycle percent value between <code class="docutils literal notranslate"><span class="pre">-100</span></code>
+and <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+<li><p><strong>value2</strong> (<em>float</em>) – The PWM 2 duty cycle percent value between <code class="docutils literal notranslate"><span class="pre">-100</span></code>
+and <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+<li><p><strong>brake1</strong> (<em>bool</em>) – The motor 1 brake option used when dutycycle is zero.
+Brake is applied when <code class="docutils literal notranslate"><span class="pre">True</span></code>. Motor is floating when <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>brake2</strong> (<em>bool</em>) – The motor 2 brake option used when dutycycle is zero.
+Brake is applied when <code class="docutils literal notranslate"><span class="pre">True</span></code>. Motor is floating when <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Set duty cycle to <code class="docutils literal notranslate"><span class="pre">50</span></code> % on PWM 1:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_dutycycle</span><span class="p">(</span><span class="n">value1</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set duty cycle to <code class="docutils literal notranslate"><span class="pre">25</span></code> % (reverse rotation) on PWM 2:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_dutycycle</span><span class="p">(</span><span class="n">value2</span><span class="o">=-</span><span class="mi">25</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set duty cycle to <code class="docutils literal notranslate"><span class="pre">20</span></code> % and <code class="docutils literal notranslate"><span class="pre">40</span></code> % on PWMs 1 and 2:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_dutycycle</span><span class="p">(</span><span class="n">value1</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">value2</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Stop motor 2 and apply brake:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_dutycycle</span><span class="p">(</span><span class="n">value2</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">brake2</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>Avoid suddenly switching the direction of rotation to avoid damaging the motor.</p></li>
+<li><p>You can use the brake option True to hold the motor in position.</p></li>
+</ol>
+</div>
+</dd></dl>
+
+</div></blockquote>
+</section>
+<section id="quadrature">
+<h2>Quadrature<a class="headerlink" href="#quadrature" title="Permalink to this headline"></a></h2>
+<blockquote>
+<div><dl class="method">
+<dt id="devices.LabJackT7.set_quadrature">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">set_quadrature</code><span class="sig-paren">(</span><em class="sig-param">quadnum=1</em>, <em class="sig-param">zphase1=False</em>, <em class="sig-param">zphase2=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.set_quadrature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.set_quadrature" title="Permalink to this definition"></a></dt>
+<dd><p>Configure quadrature encoder input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quadnum</strong> (<em>int</em>) – The number of quadrature input signals.
+<code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code> encoders can be used. For one encoder, the input
+ports are <code class="docutils literal notranslate"><span class="pre">'FIO2'</span></code> and <code class="docutils literal notranslate"><span class="pre">'FIO3'</span></code>. For two encoders, the input
+ports for the second one are <code class="docutils literal notranslate"><span class="pre">'FIO6'</span></code> and <code class="docutils literal notranslate"><span class="pre">'FIO7'</span></code>.</p></li>
+<li><p><strong>zphase1</strong> (<em>bool</em>) – The logic value indicating if a <cite>Z</cite> phase reference
+pulse is used for the first encoder. Port <code class="docutils literal notranslate"><span class="pre">'FIO1'</span></code> is used.</p></li>
+<li><p><strong>zphase2</strong> – The logic value indicating if a <cite>Z</cite> phase reference
+pulse is used for the second encoder. Port <code class="docutils literal notranslate"><span class="pre">'FIO1'</span></code> is used for
+the first encoder and port <code class="docutils literal notranslate"><span class="pre">'FIO5'</span></code> is used for the second 
+encoder. <cite>zphase2</cite> is ignored if <cite>quadnum</cite> = <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Set ports <code class="docutils literal notranslate"><span class="pre">'FIO2'</span></code> and <code class="docutils literal notranslate"><span class="pre">'FIO3'</span></code> for encoder with phase <cite>A</cite> and <cite>B</cite>
+signals only:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_quadrature</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Set ports <code class="docutils literal notranslate"><span class="pre">'FIO2'</span></code> and <code class="docutils literal notranslate"><span class="pre">'FIO3'</span></code> for encoder phase <cite>A</cite> and <cite>B</cite>
+signals, and port <code class="docutils literal notranslate"><span class="pre">'FIO1'</span></code> for the reference <cite>Z</cite> phase:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_quadrature</span><span class="p">(</span><span class="n">zphase1</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set 2 encoders with <cite>Z</cite> phase. <cite>A</cite> and <cite>B</cite> phases are on ports
+<code class="docutils literal notranslate"><span class="pre">'FIO2'</span></code> and <code class="docutils literal notranslate"><span class="pre">'FIO3'</span></code> for encoder 1, and <code class="docutils literal notranslate"><span class="pre">'FIO6'</span></code> and <code class="docutils literal notranslate"><span class="pre">'FIO7'</span></code>
+for encoder 2. The <cite>Z</cite> phase ports are respectively <code class="docutils literal notranslate"><span class="pre">'FIO1'</span></code> and
+<code class="docutils literal notranslate"><span class="pre">'FIO5'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_quadrature</span><span class="p">(</span><span class="n">quadnum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zphase1</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zphase2</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Two PWMs and two encoders can be setup at the same time on the T7 device.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.get_counter">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">get_counter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.get_counter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.get_counter" title="Permalink to this definition"></a></dt>
+<dd><p>Get current quadrature counter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The counter value or a list with 2 values for 2 encoders.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int, list(int)</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">get_counter</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because the qudrature counter counts rising and falling edges
+of phases <cite>A</cite> and <cite>B</cite>, a 1024 pulse/rev encoder will generate 4096
+counts for a full shaft turn.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.reset_counter">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">reset_counter</code><span class="sig-paren">(</span><em class="sig-param">counter1=True</em>, <em class="sig-param">counter2=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.reset_counter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.reset_counter" title="Permalink to this definition"></a></dt>
+<dd><p>Reset quadrature counter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>counter1</strong> (<em>bool</em>) – The flag indicating whether to reset counter 1 or not.
+The default value is <code class="docutils literal notranslate"><span class="pre">True</span></code> and it resets the counter.</p></li>
+<li><p><strong>counter2</strong> (<em>bool</em>) – The flag indicating whether to reset counter 2 or not.
+The default value is <code class="docutils literal notranslate"><span class="pre">True</span></code> and it resets the counter.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Resets current counter value of all encoders.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">reset_counter</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Resets current counter value only for second encoder.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">reset_counter</span><span class="p">(</span><span class="n">counter1</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The count is only reset when a <cite>Z</cite> phase isn’t being used.</p>
+</div>
+</dd></dl>
+
+</div></blockquote>
+</section>
+<section id="thermocouple">
+<h2>Thermocouple<a class="headerlink" href="#thermocouple" title="Permalink to this headline"></a></h2>
+<blockquote>
+<div><dl class="method">
+<dt id="devices.LabJackT7.set_TC">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">set_TC</code><span class="sig-paren">(</span><em class="sig-param">names</em>, <em class="sig-param">types</em>, <em class="sig-param">unit='C'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.set_TC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.set_TC" title="Permalink to this definition"></a></dt>
+<dd><p>Set configuration for thermocouple input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names</strong> (<em>str</em><em>, </em><em>list</em><em>(</em><em>str</em><em>)</em>) – The analog port(s) that will be used for thermocouple
+input. Ports <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code> to <code class="docutils literal notranslate"><span class="pre">'AIN3'</span></code> are recommended for higher
+measurement accuracy. The negative thermocouple wire should be
+connected to the LabJack <cite>GND</cite>.</p></li>
+<li><p><strong>types</strong> (<em>str</em><em>, </em><em>list</em><em>(</em><em>str</em><em>)</em>) – The thermocouple type.
+It can be a single string or a list with same length as <cite>names</cite>.
+Valid types are: <code class="docutils literal notranslate"><span class="pre">'B'</span></code>, <code class="docutils literal notranslate"><span class="pre">'E'</span></code>, <code class="docutils literal notranslate"><span class="pre">'J'</span></code>, <code class="docutils literal notranslate"><span class="pre">'K'</span></code>, <code class="docutils literal notranslate"><span class="pre">'N'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'R'</span></code>, <code class="docutils literal notranslate"><span class="pre">'S'</span></code>, <code class="docutils literal notranslate"><span class="pre">'T'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'C'</span></code>.</p></li>
+<li><p><strong>unit</strong> (<em>str</em>) – The temperature measurement unit.
+Valid values are <code class="docutils literal notranslate"><span class="pre">'C'</span></code> or <code class="docutils literal notranslate"><span class="pre">'F'</span></code>. Default unit is <code class="docutils literal notranslate"><span class="pre">'C'</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Set port <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code> for thermocouple type <code class="docutils literal notranslate"><span class="pre">'K'</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_TC</span><span class="p">(</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set ports <code class="docutils literal notranslate"><span class="pre">'AIN0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'AIN2'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'AIN3'</span></code> for thermocouples
+type <code class="docutils literal notranslate"><span class="pre">'K'</span></code> and <code class="docutils literal notranslate"><span class="pre">'J'</span></code> with measurement in Fahrenheit:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">set_TC</span><span class="p">([</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span> <span class="s1">&#39;AIN2&#39;</span><span class="p">,</span> <span class="s1">&#39;AIN3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">,</span> <span class="s1">&#39;J&#39;</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="devices.LabJackT7.get_TCtemp">
+<code class="sig-prename descclassname">LabJackT7.</code><code class="sig-name descname">get_TCtemp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/devices.html#LabJackT7.get_TCtemp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#devices.LabJackT7.get_TCtemp" title="Permalink to this definition"></a></dt>
+<dd><p>Get thermocouple temperature reading.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The temperature readings for the thermocouples defined
+using <cite>set_TC</cite>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float, list(float)</p>
+</dd>
+</dl>
+<p>Get temperature from thermocouples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ljt7</span><span class="o">.</span><span class="n">get_TCtemp</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="LabJackU6.html" class="btn btn-neutral float-left" title="LabJackU6" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Examples/index.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Eduardo Nigro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

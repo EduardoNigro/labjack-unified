@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; Documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /><link rel="shortcut icon" href="../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Analog I/O" href="Analog_IO.html" />
+    <link rel="prev" title="LabJackT7" href="../LabJackT7.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> labjack-unified<img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../LabJackU3.html">LabJackU3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LabJackU6.html">LabJackU6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LabJackT7.html">LabJackT7</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Analog_IO.html">Analog I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Digital_IO.html">Digital I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Streaming.html">Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Incremental_Encoder.html">Incremental Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Absolute_Encoder.html">Absolute Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Electric_Motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Electric_Motor_with_Encoder.html">Electric Motor with Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="T7_Streaming_Internal.html">T7 Streaming (internal clock)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="T7_Streaming_External.html">T7 Streaming (external clock)</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">labjack-unified</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Examples</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Examples/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h1>
+<p>These are some examples that can be executed with any <strong>LabJack</strong> (<strong>U3</strong>, <strong>U6</strong>,
+or <strong>T7</strong>). The table below shows the hardware that is required to run them. Four
+of the examples only need a pair of wires. Two examples require a <strong>T7</strong> device.</p>
+<p>The idea of the examples is to go beyond just using the LabJack device, by showing
+some execution loop and sampling techiques.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 54%" />
+<col style="width: 46%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Example</p></th>
+<th class="head"><p>Hardware Requirements</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="Analog_IO.html"><span class="doc">Analog I/O</span></a></p></td>
+<td><p>Two wires</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="Digital_IO.html"><span class="doc">Digital I/O</span></a></p></td>
+<td><p>Two wires</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="Streaming.html"><span class="doc">Streaming</span></a></p></td>
+<td><p>Two wires</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="Incremental_Encoder.html"><span class="doc">Incremental Encoder</span></a></p></td>
+<td><p>Quadrature encoder wit A-B phases</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="Absolute_Encoder.html"><span class="doc">Absolute Encoder</span></a></p></td>
+<td><p>Quadrature encoder wit A-B-Z phases</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="Electric_Motor.html"><span class="doc">Electric Motor</span></a></p></td>
+<td><p>12V power supply, 12V DC motor, H-Bridge</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="Electric_Motor_with_Encoder.html"><span class="doc">Electric Motor with Encoder</span></a></p></td>
+<td><p>12V power supply, 12V DC motor with encoder, H-Bridge</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="T7_Streaming_Internal.html"><span class="doc">T7 Streaming (internal clock)</span></a></p></td>
+<td><p>Two wires</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="T7_Streaming_External.html"><span class="doc">T7 Streaming (external clock)</span></a></p></td>
+<td><p>12V power supply, 12V DC motor, H-Bridge, A-B-Z encoder</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For best graphic display of the results, consider running them in an interactive
+Jupyter notebook session (instead of a plain old terminal window).</p>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../LabJackT7.html" class="btn btn-neutral float-left" title="LabJackT7" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Analog_IO.html" class="btn btn-neutral float-right" title="Analog I/O" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Eduardo Nigro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

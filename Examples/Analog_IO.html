@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analog I/O &mdash; Documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /><link rel="shortcut icon" href="../_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Digital I/O" href="Digital_IO.html" />
+    <link rel="prev" title="Examples" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> labjack-unified<img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../LabJackU3.html">LabJackU3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LabJackU6.html">LabJackU6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../LabJackT7.html">LabJackT7</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Analog I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Digital_IO.html">Digital I/O</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Streaming.html">Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Incremental_Encoder.html">Incremental Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Absolute_Encoder.html">Absolute Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Electric_Motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Electric_Motor_with_Encoder.html">Electric Motor with Encoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="T7_Streaming_Internal.html">T7 Streaming (internal clock)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="T7_Streaming_External.html">T7 Streaming (external clock)</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">labjack-unified</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Examples</a> &raquo;</li>
+      <li>Analog I/O</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Examples/Analog_IO.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="analog-i-o">
+<h1>Analog I/O<a class="headerlink" href="#analog-i-o" title="Permalink to this headline"></a></h1>
+<p>This example <a class="reference internal" href="#codeanalog"><span class="std std-ref">code</span></a> shows how to use analog inputs and outputs in a data
+acquisition loop. Random voltage outputs (between 0 and 5 V) are generated at a constant
+time interval of 0.5 s on ports <strong>DAC0</strong> and <strong>DAC1</strong>. Ports <strong>AIN0</strong> and <strong>AIN1</strong>
+are used to sample the voltages as fast as possible. The data acquisition latency
+(in average under 2 ms) is due mostly to the <strong>LabJack</strong> I/O times. Accurate time
+execution of output events can be achieved by the use of a timer logic in the loop.</p>
+<img alt="Examples/../../images/lj_io_analog_fig_1.png" src="Examples/../../images/lj_io_analog_fig_1.png" />
+<img alt="Examples/../../images/lj_io_analog_fig_2.png" src="Examples/../../images/lj_io_analog_fig_2.png" />
+<div class="highlight-python notranslate" id="codeanalog"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; lj_io_analog.py</span>
+
+<span class="sd">Uses analog input and output channels.</span>
+
+<span class="sd">This example shows how to use analog inputs and outputs in a data acquisition</span>
+<span class="sd">loop. Accurate time execution of output events can be achieved by the use of a</span>
+<span class="sd">timer logic in the loop. The voltage measurements are executed as fast as</span>
+<span class="sd">possible. The main latency source is the LabJack I/O times.</span>
+
+<span class="sd">Setup:</span>
+<span class="sd">    Connect DAC0 to AIN0</span>
+<span class="sd">    Connect DAC1 to AIN1</span>
+
+<span class="sd">The LabJack unified methods in this example are:</span>
+<span class="sd">    set_analog ....... Writes analog value to specified port(s)</span>
+<span class="sd">    get_analog ....... Reads analog value from specified port(s)</span>
+<span class="sd">    close ............ Closes the LabJack device</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">labjack_unified.utils</span> <span class="kn">import</span> <span class="n">plot_line</span>
+<span class="kn">from</span> <span class="nn">labjack_unified.devices</span> <span class="kn">import</span> <span class="n">LabJackU3</span><span class="p">,</span> <span class="n">LabJackU6</span><span class="p">,</span> <span class="n">LabJackT7</span>
+
+<span class="c1"># To use a LabJack U6 or a T7, change the device name</span>
+<span class="c1"># from LabJackU3 below to either LabJackU6 or LabJackT7</span>
+<span class="n">lj</span> <span class="o">=</span> <span class="n">LabJackU3</span><span class="p">()</span>
+
+<span class="c1"># Assigning parameters</span>
+<span class="n">tstep</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Interval between step changes (s)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Output time array</span>
+<span class="n">v1</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Output sampled voltage 1 array</span>
+<span class="n">v2</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Output sampled voltage 2 array</span>
+
+<span class="c1"># Initializing timers and starting main clock</span>
+<span class="n">tprev</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">tcurr</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="c1"># Executing acquisition loop</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Running code for 5 seconds ...&#39;</span><span class="p">)</span>
+<span class="k">while</span> <span class="n">tcurr</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+    <span class="c1"># Updating analog output every `tstep` seconds</span>
+    <span class="c1"># with random voltages between 0 and 5 V</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">tcurr</span><span class="o">/</span><span class="n">tstep</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">tprev</span><span class="o">/</span><span class="n">tstep</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">lj</span><span class="o">.</span><span class="n">set_analog</span><span class="p">(</span><span class="s1">&#39;DAC0&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span>
+        <span class="n">lj</span><span class="o">.</span><span class="n">set_analog</span><span class="p">(</span><span class="s1">&#39;DAC1&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span>
+    <span class="c1"># Updating previous time and getting current time (s)</span>
+    <span class="n">tprev</span> <span class="o">=</span> <span class="n">tcurr</span>
+    <span class="n">tcurr</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">tstart</span>
+    <span class="c1"># Acquiring analog data as fast as possible</span>
+    <span class="c1"># and appending values to output arrays</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tcurr</span><span class="p">)</span>
+    <span class="n">v1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lj</span><span class="o">.</span><span class="n">get_analog</span><span class="p">(</span><span class="s1">&#39;AIN0&#39;</span><span class="p">))</span>
+    <span class="n">v2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lj</span><span class="o">.</span><span class="n">get_analog</span><span class="p">(</span><span class="s1">&#39;AIN1&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done.&#39;</span><span class="p">)</span>
+<span class="c1"># Closing the device</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">del</span> <span class="n">lj</span>
+
+<span class="c1"># Plotting results</span>
+<span class="n">plot_line</span><span class="p">([</span><span class="n">t</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="n">yname</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AIN0&#39;</span><span class="p">,</span> <span class="s1">&#39;AIN1&#39;</span><span class="p">],</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;multi&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plot_line</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">::]],</span> <span class="p">[</span><span class="mi">1000</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">t</span><span class="p">)],</span> <span class="n">yname</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sampling Period (ms)&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Digital_IO.html" class="btn btn-neutral float-right" title="Digital I/O" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Eduardo Nigro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

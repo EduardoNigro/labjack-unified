@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>labjack-unified &mdash; Documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" /><link rel="shortcut icon" href="_static/favicon.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="LabJackU3" href="LabJackU3.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> labjack-unified<img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="LabJackU3.html">LabJackU3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LabJackU6.html">LabJackU6</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LabJackT7.html">LabJackT7</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/index.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">labjack-unified</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+      <li>labjack-unified</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="labjack-unified">
+<h1>labjack-unified<a class="headerlink" href="#labjack-unified" title="Permalink to this headline"></a></h1>
+<p>Classes with unified methods to interact with <a class="reference external" href="https://labjack.com/">LabJack</a>
+DAQ devices <strong>U3</strong>, <strong>U6</strong> and <strong>T7</strong>.</p>
+<section id="about">
+<h2>About<a class="headerlink" href="#about" title="Permalink to this headline"></a></h2>
+<p>Three classes are available (<strong>LabJackU3</strong>, <strong>LabJackU6</strong>, and <strong>LabJackT7</strong>) which have
+the common methods listed below. They should cover the majority of LabJack applications.
+There are also device specific methods as well (see each class for more details).</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 77%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>close</p></td>
+<td><p>Closes the LabJack device</p></td>
+</tr>
+<tr class="row-odd"><td><p>display_info</p></td>
+<td><p>Displays summary info about the device</p></td>
+</tr>
+<tr class="row-even"><td><p>set_digital</p></td>
+<td><p>Writes digital value to specified port(s)</p></td>
+</tr>
+<tr class="row-odd"><td><p>get_digital</p></td>
+<td><p>Reads digital value from specified port(s)</p></td>
+</tr>
+<tr class="row-even"><td><p>set_analog</p></td>
+<td><p>Writes analog value to specified port(s)</p></td>
+</tr>
+<tr class="row-odd"><td><p>get_analog</p></td>
+<td><p>Reads analog value from specified port(s)</p></td>
+</tr>
+<tr class="row-even"><td><p>get_labjacktemp</p></td>
+<td><p>Gets ambient temperature from internal sensor</p></td>
+</tr>
+<tr class="row-odd"><td><p>set_stream</p></td>
+<td><p>Sets LabJack configuration for data streaming</p></td>
+</tr>
+<tr class="row-even"><td><p>get_stream</p></td>
+<td><p>Gets streaming data</p></td>
+</tr>
+<tr class="row-odd"><td><p>stop_stream</p></td>
+<td><p>Stops data streaming</p></td>
+</tr>
+<tr class="row-even"><td><p>set_PWM</p></td>
+<td><p>Sets LabJack configuration for PWM output</p></td>
+</tr>
+<tr class="row-odd"><td><p>set_dutycycle</p></td>
+<td><p>Sets duty cycle of PWM output</p></td>
+</tr>
+<tr class="row-even"><td><p>set_quadrature</p></td>
+<td><p>Sets LabJack configuration for encoder A-B-Z input</p></td>
+</tr>
+<tr class="row-odd"><td><p>get_counter</p></td>
+<td><p>Gets edge count from encoder A-B signals</p></td>
+</tr>
+<tr class="row-even"><td><p>reset_counter</p></td>
+<td><p>Resets edge counter</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">py</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">labjack</span><span class="o">-</span><span class="n">unified</span>
+</pre></div>
+</div>
+<p>Installing <strong>labjack-unified</strong> will install its dependencies:
+<a class="reference external" href="https://pypi.org/project/LabJackPython/">LabJackPython</a> and
+<a class="reference external" href="https://pypi.org/project/labjack-ljm/">labjack-ljm</a>.
+<a class="reference external" href="https://pypi.org/project/plotly/">Plotly</a> will also be installed so graphs can be
+displayed when running the examples.</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<p>Nine <a class="reference internal" href="Examples/index.html"><span class="doc">examples</span></a>  are available, with four of them requiring only a pair of wires to be executed
+successfully. Below is the code for some analog I/O testing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; lj_io_analog.py</span>
+
+<span class="sd">Uses analog input and output channels.</span>
+
+<span class="sd">This example shows how to use analog inputs and outputs in a data acquisition</span>
+<span class="sd">loop. Accurate time execution of output events can be achieved by the use of a</span>
+<span class="sd">timer logic in the loop. The voltage measurements are executed as fast as</span>
+<span class="sd">possible. The main latency source is the LabJack I/O times.</span>
+
+<span class="sd">Setup:</span>
+<span class="sd">   Connect DAC0 to AIN0</span>
+<span class="sd">   Connect DAC1 to AIN1</span>
+
+<span class="sd">The LabJack unified methods in this example are:</span>
+<span class="sd">   set_analog ....... Writes analog value to specified port(s)</span>
+<span class="sd">   get_analog ....... Reads analog value from specified port(s)</span>
+<span class="sd">   close ............ Closes the LabJack device</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">labjack_unified.utils</span> <span class="kn">import</span> <span class="n">plot_line</span>
+<span class="kn">from</span> <span class="nn">labjack_unified.devices</span> <span class="kn">import</span> <span class="n">LabJackU3</span><span class="p">,</span> <span class="n">LabJackU6</span><span class="p">,</span> <span class="n">LabJackT7</span>
+
+<span class="c1"># To use a LabJack U6 or a T7, change the device name</span>
+<span class="c1"># from LabJackU3 below to either LabJackU6 or LabJackT7</span>
+<span class="n">lj</span> <span class="o">=</span> <span class="n">LabJackU3</span><span class="p">()</span>
+
+<span class="c1"># Assigning parameters</span>
+<span class="n">tstep</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># Interval between step changes (s)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Output time array</span>
+<span class="n">v1</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Output sampled voltage 1 array</span>
+<span class="n">v2</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Output sampled voltage 2 array</span>
+
+<span class="c1"># Initializing timers and starting main clock</span>
+<span class="n">tprev</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">tcurr</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">tstart</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="c1"># Executing acquisition loop</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Running code for 5 seconds ...&#39;</span><span class="p">)</span>
+<span class="k">while</span> <span class="n">tcurr</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+   <span class="c1"># Updating analog output every `tstep` seconds</span>
+   <span class="c1"># with random voltages between 0 and 5 V</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">tcurr</span><span class="o">/</span><span class="n">tstep</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">tprev</span><span class="o">/</span><span class="n">tstep</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">lj</span><span class="o">.</span><span class="n">set_analog</span><span class="p">(</span><span class="s1">&#39;DAC0&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span>
+      <span class="n">lj</span><span class="o">.</span><span class="n">set_analog</span><span class="p">(</span><span class="s1">&#39;DAC1&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span>
+   <span class="c1"># Updating previous time and getting current time (s)</span>
+   <span class="n">tprev</span> <span class="o">=</span> <span class="n">tcurr</span>
+   <span class="n">tcurr</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">tstart</span>
+   <span class="c1"># Acquiring analog data as fast as possible</span>
+   <span class="c1"># and appending values to output arrays</span>
+   <span class="n">t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tcurr</span><span class="p">)</span>
+   <span class="n">v1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lj</span><span class="o">.</span><span class="n">get_analog</span><span class="p">(</span><span class="s1">&#39;AIN0&#39;</span><span class="p">))</span>
+   <span class="n">v2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lj</span><span class="o">.</span><span class="n">get_analog</span><span class="p">(</span><span class="s1">&#39;AIN1&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done.&#39;</span><span class="p">)</span>
+<span class="c1"># Closing the device</span>
+<span class="n">lj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">del</span> <span class="n">lj</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Due to their implementation, the classes <strong>LabJackU3</strong> and <strong>LabJackU6</strong> only
+work on a Windows platform.</p>
+</div>
+</section>
+<section id="issues-and-questions">
+<h2>Issues and questions<a class="headerlink" href="#issues-and-questions" title="Permalink to this headline"></a></h2>
+<p>If you have a feature request, a bug report, or even a question, please open an
+<a class="reference external" href="https://github.com/EduardoNigro/labjack-unified/issues/new">issue on GitHub</a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="LabJackU3.html" class="btn btn-neutral float-right" title="LabJackU3" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Eduardo Nigro.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
