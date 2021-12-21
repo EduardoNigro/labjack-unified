@@ -9,8 +9,8 @@ are used to sample the voltages as fast as possible. The data acquisition latenc
 execution of output events can be achieved by the use of a timer logic in the loop.
 
 
-.. image:: images/lj_io_analog_fig_1.png
-.. image:: images/lj_io_analog_fig_2.png
+.. image:: ../../images/lj_io_analog_fig_1.png
+.. image:: ../../images/lj_io_analog_fig_2.png
 
 .. _codeanalog:
 
