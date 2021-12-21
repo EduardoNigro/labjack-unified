@@ -4,10 +4,11 @@ T7 Streaming (internal clock)
 For extended or indefinite streaming time, using a PI closed-loop control on the
 **LabJack** data backlog will prevent an eventual overflow (or starvation) of the
 streaming data buffer. This seems to be more critical on the **T7** device. This
-example :ref:`code <codestreamingT7>` also streams two 183 Hz PWM signals into ports **AIN0**
-and **AIN1**, but for a total of 60 blocks of 0.5 s each. The first figure shows the
-last 2 blocks of data, while the second figure shows the backlog as a function of time
-for the 30 s duration of the streaming. The target backlog value is 10%.
+example :ref:`code <codestreamingT7>` also streams two 183 Hz PWM signals from ports
+**FIO0** and **FIO4** into ports **AIN0** and **AIN1**, but for a total of 60 blocks
+of 0.5 s each. The first figure shows the last 2 blocks of data, while the second
+figure shows the backlog as a function of time for the 30 s duration of the streaming.
+The target backlog value is 10%.
 
 
 .. image:: ../../images/ljt7_streaming_internal_fig_1.png

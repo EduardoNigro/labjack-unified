@@ -5,6 +5,9 @@ In this example code, the motor speed is ramps up for 5 seconds and down for 5 s
 as the PWM output is ramped linearly from 0 to 100 % and then back to 0. The encoder is
 used to measure the shaft angular position, from which the motor speed can be calulated.
 
+.. note::
+   It's not possible to simultaneously setup a motor with direction control and an
+   encoder on a **LabJack U3**.
 
 .. code-block:: python
 

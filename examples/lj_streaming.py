@@ -5,7 +5,7 @@ Collects streaming data.
 Data is acquired at a user-defined `samplerate` up to 50000 Samples/s on a U3
 or a U6, and 100000 Samples/s on a T7. The effective sampling rate per channel 
 is `samplerate` divided by the number of channels. Data blocks are collected 
-at a user-defined `readrate' in seconds. Typical values of 0.5 seconds are used
+at a user-defined `readrate` in seconds. Typical values of 0.5 seconds are used
 for high sample rates.
 
 Setup:
