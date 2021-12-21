@@ -6,7 +6,7 @@ consecutive 0.5 s blocks. On a **LabJack U3**, two 183 Hz PWM signals are genera
 on ports **FIO4** and **FIO5**, and streamed into **AIN0** and **AIN1**, repectively.
 
 
-.. image:: ../../images/lj_streaming_fig_1.png
+.. image:: images/lj_streaming_fig_1.png
 
 .. _codestreaming:
 
