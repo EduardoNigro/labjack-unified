@@ -5,13 +5,6 @@ labjack-unified
 Classes with unified methods to interact with `LabJack <https://labjack.com/>`__
 DAQ devices **U3**, **U6** and **T7**.
 
-.. toctree::
-   :hidden:
-
-   LabJackU3
-   LabJackU6
-   LabJackT7
-
 
 About
 -----
@@ -52,8 +45,8 @@ Installing **labjack-unified** will install its dependencies: *LabJackPython* an
 
 Examples
 --------
-Nine examples are available, with four of them requiring only a pair of wires to be executed
-successfully. Below is the code for `lj_io_analog.py`:
+Nine :doc:`examples <Examples/index>`  are available, with four of them requiring only a pair of wires to be executed
+successfully. Below is the code for some analog I/O testing:
 
 .. code-block:: python
 
@@ -127,3 +120,12 @@ Issues and questions
 
 If you have a feature request, a bug report, or even a question, please open an
 `issue on GitHub <https://github.com/EduardoNigro/labjack-unified/issues/new>`__.
+
+
+.. toctree::
+   :hidden:
+
+   LabJackU3
+   LabJackU6
+   LabJackT7
+   Examples/index
