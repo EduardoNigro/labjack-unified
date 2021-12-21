@@ -19,23 +19,23 @@ The idea of the examples is to go beyond just using the LabJack device, by showi
 This example shows how to use analog inputs and outputs in a data acquisition
 loop. Random voltage outputs (between 0 and 5 V) are generated at a constant time interval of 0.5 s on ports **DAC0** and **DAC1**. Ports **AIN0** and **AIN1** are used to sample the voltages as fast as possible. The data acquisition latency (in average under 2 ms) is due mostly to the **LabJack** I/O times. Accurate time execution of output events can be achieved by the use of a timer logic in the loop.
 
-![](../images/lj_io_analog_fig_1.PNG)
-![](../images/lj_io_analog_fig_2.PNG)
+![](../docs/images/lj_io_analog_fig_1.PNG)
+![](../docs/images/lj_io_analog_fig_2.PNG)
 
 ## lj_io_digital.py
 This example shows how to use digital inputs and outputs in a data acquisition loop. Random digital outputs (0 or 1) are generated at a constant time interval of 0.2 s on ports **FIO4** and **FIO5**. Ports **FIO6** and **FIO7** are used to sample the signals at a constant time interval of 10 ms. The variability on the sampling period is less than 0.02 ms.
 
-![](../images/lj_io_digital_fig_1.PNG)
-![](../images/lj_io_digital_fig_2.PNG)
+![](../docs/images/lj_io_digital_fig_1.PNG)
+![](../docs/images/lj_io_digital_fig_2.PNG)
 
 ## lj_streaming.py
 Data is acquired at 50,000 Samples/s, for two consecutive 0.5 s blocks. Two 183 Hz PWM signals are generated on ports **FIO4** and **FIO5**, and streamed into **AIN0** and **AIN1**, repectively.
 
-![](../images/lj_streaming_fig_1.PNG)
+![](../docs/images/lj_streaming_fig_1.PNG)
 
 
 ## ljt7_streaming_internal.py
 For extended or indefinite streaming time, using a PI closed-loop control on the **LabJack** data backlog will prevent an eventual overflow (or starvation) of the streaming data buffer. This seems to be more critical on the **T7** device. This example also streams two 183 Hz PWM signals into ports **AIN0** and **AIN1**, but for a total of 60 blocks of 0.5 s each. The first figure shows the last 2 blocks of data, while the second figure shows the backlog as a function of time for the 30 s duration of the streaming. The target backlog value is 10%.
 
-![](../images/ljt7_streaming_internal_fig_1.PNG)
-![](../images/ljt7_streaming_internal_fig_2.PNG)
+![](../docs/images/ljt7_streaming_internal_fig_1.PNG)
+![](../docs/images/ljt7_streaming_internal_fig_2.PNG)
