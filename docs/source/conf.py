@@ -22,12 +22,12 @@ import sphinx_rtd_theme
 
  # -- Project information -----------------------------------------------------
 
-project = 'labjack-unified'
+project = 'Labjack Unified'
 copyright = '2021, Eduardo Nigro'
 author = 'Eduardo Nigro'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.3'
+release = '0.0.4'
 
 
 # -- General configuration ---------------------------------------------------
@@ -52,6 +52,5 @@ autodoc_member_order = 'groupwise'
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
-html_title = 'Documentation'
 html_logo = '../images/logo.png'
 html_favicon = '../images/favicon.png'

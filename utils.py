@@ -1,10 +1,11 @@
 """ utils.py 
 
-Contains useful function that is used in the LabJack coding examples.
-Plotly was chosen over Matplotlib due to its interactive graphs.
+Contains a useful plotting function that is used in the coding examples.
+The function was built using Plotly instead of Matplotlib due to its
+interactive graphs.
 
 Author: Eduardo Nigro
-    rev 0.0.2
+    rev 0.0.3
     2021-12-13
 """
 import numpy as np
@@ -19,7 +20,38 @@ mytemplate.layout['paper_bgcolor'] = 'rgb(250, 250, 250)'
 pio.templates.default = mytemplate
 
 def plot_line(x, y, xname='Time (s)', yname=None,
-              axes='single', marker=False, legend=True):
+              axes='single', marker=False, legend=None):
+    """
+    Plot lines using plotly.
+
+    :param x: x values for plotting.
+    :type x: list(float)
+
+    :param y: y values for plotting.
+    :type y: list(float)
+
+    :param xname: The x axis title. Default value is ``'Time (s)'``.
+    :type xname: str
+
+    :param yname: The y axis title.
+        A string or list of strings containing the names of the y axis titles.
+        If ``None``, the y axis titles will be ``'y0'``, ``'y1'``, etc.
+    :type yname: str, list(str)
+
+    :param axes: The configuration of axis on the plot.
+        If ``'single'``, multiple curves are plotted on the same axis.
+        If ``'multi'``, each curve is plotted on its own axis.
+    :type axes: str
+
+    :param marker: Displays markers on the curves if ``True``.
+    :type marker: bool
+
+    :param legend: List of legend names for multiple curves.
+        Length of `legend` must be the same as length of `y`.
+    :type legend: list(str)
+
+
+    """
     # Adjusting inputs
     if type(x) != list: x = [x]
     if type(y) != list: y = [y]
@@ -27,15 +59,17 @@ def plot_line(x, y, xname='Time (s)', yname=None,
         yname = ['y'+str(i) for i in range(len(y))]
     elif type(yname) != list:
         yname = [yname]
+    if (len(yname) == 1) and (len(y) > 1):
+        yname = yname * len(y)
     # Setting legend display option
-    if legend:
-        if (len(yname) > 1) and (axes == 'single'):
+    if legend is not None:
+        if len(legend) == len(y):
             showlegend = True
         else:
-            showlegend = False
-            yname = yname * len(y)
+            raise Exception("'y' and 'legend' must have the same length.")
     else:
         showlegend = False
+        legend = [None] * len(y)
     # Checking for single (with multiple curves)
     # or multiple axes with one curve per axes
     if axes == 'single':
@@ -46,6 +80,8 @@ def plot_line(x, y, xname='Time (s)', yname=None,
         naxes = len(y)
         iaxes = range(0, len(y))
         colors = ['rgb(50, 100, 150)'] * len(y)
+    else:
+        raise Exception("Valid axes options are: 'single' or 'multi'.")
     # Checking for marker options
     if marker:
         mode = 'lines+markers'
@@ -58,11 +94,12 @@ def plot_line(x, y, xname='Time (s)', yname=None,
     hfig = 100+150*naxes
     # Plotting results
     fig = make_subplots(rows=naxes, cols=1)
-    for i, xi, yi, ynamei, color in zip(iaxes, x, y, yname, colors):
+    for i, xi, yi, ynamei, legendi, color in zip(
+            iaxes, x, y, yname, legend, colors):
         fig.add_trace(go.Scatter(
             x=xi,
             y=yi,
-            name=ynamei,
+            name=legendi,
             mode=mode,
             line=dict(
                 width=1,

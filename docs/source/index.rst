@@ -132,3 +132,4 @@ If you have a feature request, a bug report, or even a question, please open an
    LabJackU6
    LabJackT7
    Examples/index
+   Utils
