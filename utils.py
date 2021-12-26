@@ -5,8 +5,8 @@ The function was built using Plotly instead of Matplotlib due to its
 interactive graphs.
 
 Author: Eduardo Nigro
-    rev 0.0.3
-    2021-12-13
+    rev 0.0.5
+    2021-12-26
 """
 import numpy as np
 import plotly.io as pio
