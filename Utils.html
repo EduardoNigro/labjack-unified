@@ -74,8 +74,32 @@ The function was built using <a class="reference external" href="https://plotly.
 of <a class="reference external" href="https://matplotlib.org/">Matplotlib</a> due to its interactive graphs.
 It works well in an interactive session in <a class="reference external" href="https://code.visualstudio.com/">VSCode</a>.
 In terminal mode, the results are displayed in a web browser.</p>
+<dl class="function">
+<dt id="utils.plot_line">
+<code class="sig-prename descclassname">utils.</code><code class="sig-name descname">plot_line</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">xname='Time (s)'</em>, <em class="sig-param">yname=None</em>, <em class="sig-param">axes='single'</em>, <em class="sig-param">marker=False</em>, <em class="sig-param">legend=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#plot_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.plot_line" title="Permalink to this definition"></a></dt>
+<dd><p>Plot lines using plotly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – x values for plotting.</p></li>
+<li><p><strong>y</strong> (<em>list</em><em>(</em><em>float</em><em>)</em>) – y values for plotting.</p></li>
+<li><p><strong>xname</strong> (<em>str</em>) – The x axis title. Default value is <code class="docutils literal notranslate"><span class="pre">'Time</span> <span class="pre">(s)'</span></code>.</p></li>
+<li><p><strong>yname</strong> (<em>str</em><em>, </em><em>list</em><em>(</em><em>str</em><em>)</em>) – The y axis title.
+A string or list of strings containing the names of the y axis titles.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the y axis titles will be <code class="docutils literal notranslate"><span class="pre">'y0'</span></code>, <code class="docutils literal notranslate"><span class="pre">'y1'</span></code>, etc.</p></li>
+<li><p><strong>axes</strong> (<em>str</em>) – The configuration of axis on the plot.
+If <code class="docutils literal notranslate"><span class="pre">'single'</span></code>, multiple curves are plotted on the same axis.
+If <code class="docutils literal notranslate"><span class="pre">'multi'</span></code>, each curve is plotted on its own axis.</p></li>
+<li><p><strong>marker</strong> (<em>bool</em>) – Displays markers on the curves if <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>legend</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – List of legend names for multiple curves.
+Length of <cite>legend</cite> must be the same as length of <cite>y</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyev3.utils</span> <span class="kn">import</span> <span class="n">plot_line</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">labjack_unified.utils</span> <span class="kn">import</span> <span class="n">plot_line</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
