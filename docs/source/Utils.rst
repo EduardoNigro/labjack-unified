@@ -10,7 +10,7 @@ In terminal mode, the results are displayed in a web browser.
 .. autofunction:: utils.plot_line
 
 >>> import numpy as np
->>> from pyev3.utils import plot_line
+>>> from labjack_unified.utils import plot_line
 >>> t = np.linspace(0,2,100)
 >>> y0 = np.sin(1*np.pi*t)
 >>> y1 = np.cos(1*np.pi*t)
